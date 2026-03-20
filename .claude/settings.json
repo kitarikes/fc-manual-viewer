@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Write(docs/event-storming/*.drawio)",
+      "Bash(mkdir -p docs/event-storming)"
+    ]
+  }
+}
