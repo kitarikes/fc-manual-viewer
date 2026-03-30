@@ -1,0 +1,67 @@
+{
+  "plugins": {},
+  "filters": {},
+  "rules": {
+    "preset-ja-technical-writing": {
+      "sentence-length": {
+        "max": 100
+      },
+      "max-comma": {
+        "max": 4
+      },
+      "max-ten": {
+        "max": 4
+      },
+      "no-mix-dearu-desumasu": {
+        "preferInHeader": "である",
+        "preferInBody": "である",
+        "preferInList": "である",
+        "strict": false
+      },
+      "ja-no-mixed-period": {
+        "periodMark": "。",
+        "allowPeriodMarks": [".", "．"],
+        "forceAppendPeriod": false
+      },
+      "no-doubled-conjunction": true,
+      "no-doubled-joshi": {
+        "min_interval": 1,
+        "strict": false,
+        "allow": [],
+        "separatorCharacters": [
+          "、",
+          "。",
+          ".",
+          ",",
+          ",",
+          "「",
+          "」",
+          "（",
+          "）"
+        ],
+        "commaCharacters": ["、", ",", ","]
+      },
+      "no-dropping-the-ra": true,
+      "no-doubled-conjunctive-particle-ga": true,
+      "no-redundant-expression": true,
+      "no-exclamation-question-mark": false,
+      "no-hankaku-kana": true,
+      "ja-no-weak-phrase": true,
+      "ja-no-successive-word": true,
+      "ja-no-abusage": true
+    },
+    "preset-ja-spacing": {
+      "ja-space-between-half-and-full-width": {
+        "space": "always",
+        "exceptPunctuation": true
+      },
+      "ja-space-around-code": false,
+      "ja-no-space-between-full-width": true,
+      "ja-nakaguro-or-halfwidth-space-between-katakana": true,
+      "ja-space-after-exclamation": false,
+      "ja-space-after-question": false
+    },
+    "spellcheck-tech-word": true,
+    "no-todo": true
+  }
+}

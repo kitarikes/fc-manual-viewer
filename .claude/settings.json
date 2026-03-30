@@ -4,5 +4,19 @@
       "Write(docs/event-storming/*.drawio)",
       "Bash(mkdir -p docs/event-storming)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | { read -r f || exit 0; [[ \"$f\" == *.md ]] || exit 0; ./node_modules/.bin/textlint \"$f\"; }",
+            "statusMessage": "textlintチェック中..."
+          }
+        ]
+      }
+    ]
   }
 }

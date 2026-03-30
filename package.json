@@ -1,0 +1,24 @@
+{
+  "name": "fc-manual-viewer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:text": "textlint \"docs/**/*.md\" \"*.md\"",
+    "lint:text:fix": "textlint --fix \"docs/**/*.md\" \"*.md\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "textlint": "^15.5.2",
+    "textlint-rule-no-todo": "^2.0.1",
+    "textlint-rule-preset-ja-spacing": "^2.4.3",
+    "textlint-rule-preset-ja-technical-writing": "^12.0.2",
+    "textlint-rule-spellcheck-tech-word": "^5.0.0"
+  }
+}
