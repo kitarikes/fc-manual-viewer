@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prototype Gallery — FC Manual Viewer</title>
+  <link rel="stylesheet" href="gallery.css">
+</head>
+<body>
+
+<header class="gallery-header">
+  <p class="header-kana">FC Manual Viewer / Prototype Gallery</p>
+  <h1>プロトタイプ一覧</h1>
+  <p>UX検証用の静的プロトタイプ。本番コードとは独立した環境で管理されます。</p>
+</header>
+
+<main class="gallery-main">
+  <p class="section-label">Prototypes</p>
+  <h2 class="section-heading">検証一覧</h2>
+  <div class="cards-grid" id="cards-grid">
+    <!-- JS によって動的生成 -->
+  </div>
+</main>
+
+<footer class="gallery-footer">
+  FC Manual Viewer — Internal Prototyping Environment
+</footer>
+
+<script>
+(async function () {
+  const grid = document.getElementById('cards-grid');
+
+  // manifest.json を取得してプロトタイプ一覧を構築する
+  let manifest;
+  try {
+    const res = await fetch('./manifest.json');
+    manifest = await res.json();
+  } catch (e) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <p>manifest.json の読み込みに失敗しました。<br>
+        ローカルサーバー経由でアクセスしてください。<br>
+        <code>npx serve prototype</code></p>
+      </div>`;
+    return;
+  }
+
+  const prototypes = manifest.prototypes || [];
+
+  if (prototypes.length === 0) {
+    grid.innerHTML = `<div class="empty-state"><p>プロトタイプがまだ登録されていません。<br>README.md の手順に従って追加してください。</p></div>`;
+    return;
+  }
+
+  // 各プロトタイプの meta.json を並行取得
+  const metas = await Promise.all(
+    prototypes.map(async (dir) => {
+      try {
+        const res = await fetch(`./${dir}/meta.json`);
+        const meta = await res.json();
+        return { dir, ...meta };
+      } catch {
+        return { dir, title: dir, description: '(meta.json を読み込めませんでした)', verifying: '', author: '', createdAt: '' };
+      }
+    })
+  );
+
+  // createdAt 降順（新しいものが上）
+  metas.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+
+  grid.innerHTML = metas.map((m) => {
+    const dateLabel = m.createdAt
+      ? new Date(m.createdAt).toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' })
+      : '';
+
+    return `
+      <a class="proto-card" href="./${m.dir}/index.html">
+        <div class="card-accent"></div>
+        <div class="card-body">
+          <p class="card-date">${dateLabel}</p>
+          <h3 class="card-title">${escHtml(m.title)}</h3>
+          <p class="card-description">${escHtml(m.description)}</p>
+          ${m.verifying ? `
+          <div class="card-verifying">
+            <p class="card-verifying-label">Verifying</p>
+            <p class="card-verifying-text">${escHtml(m.verifying)}</p>
+          </div>` : ''}
+          <div class="card-footer">
+            <span class="card-author">@${escHtml(m.author)}</span>
+            <span class="card-cta">
+              開く
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 8h10M9 4l4 4-4 4"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+    `;
+  }).join('');
+})();
+
+function escHtml(s) {
+  return String(s ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+</script>
+
+</body>
+</html>

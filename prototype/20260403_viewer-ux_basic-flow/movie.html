@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>マニュアル — FC Manual Viewer</title>
+  <link rel="stylesheet" href="src/styles.css">
+  <style>
+    /* movie list → detail 共通追加スタイル */
+    .movie-item-right .arrow-cta {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--ivory-border);
+      border-radius: var(--radius);
+      font-size: 0.72rem;
+    }
+
+    .movie-item:hover .arrow-cta {
+      border-color: var(--gold);
+      background: var(--gold-pale);
+    }
+
+    /* Detail: Progress indicator */
+    .progress-bar-wrap {
+      background: var(--ivory-border);
+      border-radius: 2px;
+      height: 4px;
+      margin-bottom: 0.3rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, var(--primary), var(--gold));
+      height: 100%;
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-label {
+      font-family: var(--sans);
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 300;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Compact meta badges */
+    .meta-badge {
+      font-family: var(--sans);
+      font-size: 0.7rem;
+      color: var(--text-sub);
+      font-weight: 300;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .meta-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+    /* Back to list link */
+    .back-to-list {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--gold);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.75rem;
+      transition: gap 0.15s ease;
+    }
+
+    .back-to-list:hover { gap: 0.65rem; }
+    .back-to-list svg { width: 14px; height: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <div id="navbar-root"></div>
+
+  <!-- Page Header -->
+  <div id="page-header-root"></div>
+
+  <!-- Main -->
+  <main class="page-main" id="page-main">
+    <p class="loading">読み込み中…</p>
+  </main>
+
+  <script src="src/main.js"></script>
+  <script>
+    const { BRANDS, CATEGORIES, MOVIES, SEQUENCES } = window.AppData;
+    const { getParam, escHtml, difficultyLabel, formatDuration } = window.AppUtils;
+
+    const brandSlug = getParam('brand');
+    const categorySlug = getParam('category');
+    const movieId = getParam('movie');
+
+    const brand = BRANDS.find(b => b.slug === brandSlug);
+    const category = CATEGORIES.find(c => c.slug === categorySlug && c.brandId === brand?.id);
+
+    // ---- Error guard ----
+    if (!brand || !category) {
+      document.getElementById('navbar-root').innerHTML = navbarHtml({ back: 'index.html', backLabel: 'ブランド選択' });
+      document.getElementById('page-main').innerHTML =
+        '<p class="loading">ページが見つかりませんでした。<br><a href="index.html">トップへ戻る</a></p>';
+      renderComplete();
+    } else if (movieId) {
+      renderMovieDetail();
+    } else {
+      renderMovieList();
+    }
+
+    // ============================================================
+    // Movie List
+    // ============================================================
+    function renderMovieList() {
+      const movies = MOVIES.filter(m => m.categoryId === category.id);
+
+      document.title = `${category.name} — ${brand.name}`;
+
+      document.getElementById('navbar-root').innerHTML = navbarHtml({
+        back: `category.html?brand=${brandSlug}`,
+        backLabel: 'カテゴリ一覧',
+        crumbs: [brand.name, category.name],
+      });
+
+      document.getElementById('page-header-root').innerHTML = `
+        <div class="page-header">
+          <div class="page-header-inner">
+            <p class="page-label">${escHtml(category.icon)} ${escHtml(category.name)}</p>
+            <h1>${escHtml(category.name)}</h1>
+            <p>${escHtml(category.description)}</p>
+          </div>
+        </div>`;
+
+      if (movies.length === 0) {
+        document.getElementById('page-main').innerHTML = `
+          <p class="section-label">Manuals</p>
+          <h2 class="section-heading">マニュアル一覧</h2>
+          <p class="loading">このカテゴリのマニュアルは現在準備中です。</p>`;
+        return;
+      }
+
+      document.getElementById('page-main').innerHTML = `
+        <p class="section-label">Manuals</p>
+        <h2 class="section-heading">${movies.length}本のマニュアル</h2>
+        <div class="movie-list">
+          ${movies.map(m => `
+            <a class="movie-item"
+               href="movie.html?brand=${escHtml(brandSlug)}&category=${escHtml(categorySlug)}&movie=${escHtml(m.id)}">
+              <div class="movie-item-left">
+                <span class="movie-difficulty difficulty-${m.difficulty}">
+                  ${difficultyLabel(m.difficulty)}
+                </span>
+                <h3 class="movie-title">${escHtml(m.title)}</h3>
+                <p class="movie-desc">${escHtml(m.description)}</p>
+                <div class="movie-meta-row">
+                  <span class="movie-meta-badge">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="8" cy="8" r="6"/>
+                      <path d="M8 5v3l2 2"/>
+                    </svg>
+                    約${m.estimatedMinutes}分
+                  </span>
+                  <span class="movie-meta-badge">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M2 4h12M2 8h8M2 12h5"/>
+                    </svg>
+                    ${m.totalSteps}ステップ
+                  </span>
+                </div>
+                <div class="movie-tags">
+                  ${m.tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}
+                </div>
+              </div>
+              <div class="movie-item-right">
+                <span class="arrow-cta">
+                  見る
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 8h10M9 4l4 4-4 4"/>
+                  </svg>
+                </span>
+              </div>
+            </a>
+          `).join('')}
+        </div>`;
+    }
+
+    // ============================================================
+    // Movie Detail
+    // ============================================================
+    function renderMovieDetail() {
+      const movie = MOVIES.find(m => m.id === movieId && m.categoryId === category.id);
+
+      if (!movie) {
+        document.getElementById('navbar-root').innerHTML = navbarHtml({
+          back: `movie.html?brand=${brandSlug}&category=${categorySlug}`,
+          backLabel: category.name,
+          crumbs: [brand.name, category.name],
+        });
+        document.getElementById('page-main').innerHTML =
+          '<p class="loading">マニュアルが見つかりませんでした。</p>';
+        return;
+      }
+
+      const sequences = SEQUENCES[movieId] || [];
+      document.title = `${movie.title} — FC Manual Viewer`;
+
+      document.getElementById('navbar-root').innerHTML = navbarHtml({
+        back: `movie.html?brand=${brandSlug}&category=${categorySlug}`,
+        backLabel: category.name,
+        crumbs: [brand.name, category.name, movie.title],
+      });
+
+      document.getElementById('page-header-root').innerHTML = `
+        <div class="page-header">
+          <div class="page-header-inner">
+            <p class="page-label">${escHtml(category.icon)} ${escHtml(category.name)}</p>
+            <h1>${escHtml(movie.title)}</h1>
+            <p>${escHtml(movie.description)}</p>
+          </div>
+        </div>`;
+
+      const totalSec = sequences.reduce((sum, s) => sum + s.durationSeconds, 0);
+      const stepsHtml = sequences.map((s, i) => {
+        const pct = Math.round(((i + 1) / sequences.length) * 100);
+        const warnHtml = s.warnings && s.warnings.length > 0
+          ? `<div class="warnings-box">
+               <p class="warnings-label">注意事項</p>
+               <ul class="warnings-list">
+                 ${s.warnings.map(w => `<li>${escHtml(w)}</li>`).join('')}
+               </ul>
+             </div>`
+          : '';
+
+        return `
+          <div class="step-card" id="step-${s.stepNumber}">
+            <div class="step-header" onclick="toggleStep(this)">
+              <div class="step-number">${String(s.stepNumber).padStart(2, '0')}</div>
+              <div class="step-header-text">
+                <h4 class="step-title">${escHtml(s.title)}</h4>
+                <p class="step-duration">${formatDuration(s.durationSeconds)}</p>
+              </div>
+              <div class="step-toggle">
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M4 6l4 4 4-4"/>
+                </svg>
+              </div>
+            </div>
+            <div class="step-body">
+              <!-- Video placeholder -->
+              <div class="step-video-placeholder">
+                <div class="play-btn">
+                  <svg viewBox="0 0 16 16" fill="currentColor">
+                    <path d="M5 3l8 5-8 5V3z"/>
+                  </svg>
+                </div>
+                <p class="video-id-label">YouTube: ${escHtml(s.videoId)}</p>
+              </div>
+              <p class="step-description">${escHtml(s.description)}</p>
+              ${s.keyPoints.length > 0 ? `
+              <p class="keypoints-label">習得ポイント</p>
+              <ul class="keypoints-list">
+                ${s.keyPoints.map(k => `<li>${escHtml(k)}</li>`).join('')}
+              </ul>` : ''}
+              ${warnHtml}
+            </div>
+          </div>`;
+      }).join('');
+
+      document.getElementById('page-main').innerHTML = `
+        <a class="back-to-list"
+           href="movie.html?brand=${escHtml(brandSlug)}&category=${escHtml(categorySlug)}">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M10 12l-4-4 4-4"/>
+          </svg>
+          ${escHtml(category.name)} 一覧へ戻る
+        </a>
+
+        <!-- Movie info card -->
+        <div class="movie-detail-header">
+          <h2 class="movie-detail-title">${escHtml(movie.title)}</h2>
+          <p class="movie-detail-desc">${escHtml(movie.description)}</p>
+          <div class="movie-detail-meta">
+            <span class="movie-difficulty difficulty-${movie.difficulty}">
+              ${difficultyLabel(movie.difficulty)}
+            </span>
+            <span class="meta-badge">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/>
+              </svg>
+              合計 約${movie.estimatedMinutes}分
+            </span>
+            <span class="meta-badge">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M2 4h12M2 8h8M2 12h5"/>
+              </svg>
+              ${movie.totalSteps}ステップ
+            </span>
+            <div class="movie-tags">
+              ${movie.tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+
+        <!-- Steps -->
+        <p class="steps-section-label">Steps</p>
+        <h3 class="steps-heading">手順（${sequences.length}ステップ）</h3>
+        <div class="steps-list">
+          ${stepsHtml}
+        </div>`;
+
+      // 最初のステップを自動展開
+      const firstCard = document.querySelector('.step-card');
+      if (firstCard) {
+        firstCard.classList.add('open');
+      }
+    }
+
+    // ============================================================
+    // Helpers
+    // ============================================================
+    function navbarHtml({ back, backLabel, crumbs = [] }) {
+      const crumbsHtml = crumbs.length > 0
+        ? crumbs.map((c, i) => {
+            const cls = i === crumbs.length - 1 ? 'nav-current' : 'nav-brand-name';
+            return `<span class="${cls}">${escHtml(c)}</span>`;
+          }).join('<span class="sep"> › </span>')
+        : '';
+
+      return `
+        <nav class="navbar">
+          <a href="${escHtml(back)}" class="nav-back">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M10 12l-4-4 4-4"/>
+            </svg>
+            ${escHtml(backLabel)}
+          </a>
+          ${crumbsHtml ? `<div class="nav-breadcrumb">${crumbsHtml}</div>` : ''}
+          <span class="navbar-title">FC Manual Viewer</span>
+        </nav>`;
+    }
+
+    function renderComplete() {
+      // エラー時は何もしない
+    }
+
+    window.toggleStep = function (headerEl) {
+      const card = headerEl.closest('.step-card');
+      card.classList.toggle('open');
+    };
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>カテゴリ一覧 — FC Manual Viewer</title>
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+
+  <!-- Navbar (JS で更新) -->
+  <div id="navbar-root"></div>
+
+  <!-- Page Header (JS で更新) -->
+  <div id="page-header-root"></div>
+
+  <!-- Main -->
+  <main class="page-main">
+    <p class="section-label">Categories</p>
+    <h2 class="section-heading" id="section-heading">カテゴリ一覧</h2>
+    <div class="category-grid" id="category-grid">
+      <p class="loading">読み込み中…</p>
+    </div>
+  </main>
+
+  <script src="src/main.js"></script>
+  <script>
+    const { BRANDS, CATEGORIES } = window.AppData;
+    const { getParam, escHtml } = window.AppUtils;
+
+    const brandSlug = getParam('brand');
+    const brand = BRANDS.find(b => b.slug === brandSlug);
+
+    if (!brand) {
+      document.getElementById('navbar-root').innerHTML = `
+        <nav class="navbar">
+          <a href="index.html" class="nav-back">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M10 12l-4-4 4-4"/>
+            </svg>
+            ブランド選択
+          </a>
+          <span class="navbar-title">FC Manual Viewer</span>
+        </nav>`;
+      document.getElementById('category-grid').innerHTML =
+        '<p class="loading">ブランドが見つかりませんでした。<br><a href="index.html">トップへ戻る</a></p>';
+    } else {
+      // Navbar
+      document.getElementById('navbar-root').innerHTML = `
+        <nav class="navbar">
+          <a href="index.html" class="nav-back">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M10 12l-4-4 4-4"/>
+            </svg>
+            ブランド選択
+          </a>
+          <div class="nav-breadcrumb">
+            <span class="nav-brand-name">${escHtml(brand.name)}</span>
+            <span class="sep"> › </span>
+            <span class="nav-current">カテゴリ一覧</span>
+          </div>
+          <span class="navbar-title">FC Manual Viewer</span>
+        </nav>`;
+
+      // Page header
+      document.title = `${brand.name} — カテゴリ一覧`;
+      document.getElementById('page-header-root').innerHTML = `
+        <div class="page-header">
+          <div class="page-header-inner">
+            <p class="page-label">${escHtml(brand.icon)} ${escHtml(brand.name)}</p>
+            <h1>カテゴリ一覧</h1>
+            <p>${escHtml(brand.description)}</p>
+          </div>
+        </div>`;
+
+      // Category grid
+      const cats = CATEGORIES.filter(c => c.brandId === brand.id);
+      if (cats.length === 0) {
+        document.getElementById('category-grid').innerHTML =
+          '<p class="loading">このブランドにカテゴリはまだ登録されていません。</p>';
+      } else {
+        document.getElementById('section-heading').textContent =
+          `${cats.length}つのカテゴリ`;
+        document.getElementById('category-grid').innerHTML = cats.map(c => `
+          <a class="category-card"
+             href="movie.html?brand=${escHtml(brandSlug)}&category=${escHtml(c.slug)}">
+            <div class="category-emoji">${c.icon}</div>
+            <h3 class="category-name">${escHtml(c.name)}</h3>
+            <p class="category-desc">${escHtml(c.description)}</p>
+            <div class="category-meta">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="3" width="12" height="11" rx="1"/>
+                <path d="M5 3V1M11 3V1M2 7h12"/>
+              </svg>
+              ${c.movieCount > 0 ? `${c.movieCount}本のマニュアル` : 'マニュアル準備中'}
+            </div>
+          </a>
+        `).join('');
+      }
+    }
+  </script>
+
+</body>
+</html>
