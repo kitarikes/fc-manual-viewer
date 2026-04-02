@@ -56,6 +56,26 @@ prototype/YYYYMMDD_テーマ_説明/
     styles.css      # 共通スタイル
 ```
 
+### HTML パス解決ルール
+
+- `src/styles.css` や `src/main.js` は相対参照で置いてよい
+- ただし `http://localhost:3000/20260403_viewer-ux_basic-flow` のように末尾スラッシュなしで開かれることを前提にする
+- 各 HTML の `<head>` に、そのプロトタイプのルートを指す `<base href="/YYYYMMDD_テーマ_説明/">` を必ず入れる
+- これにより CSS、JS、`category.html?brand=...` のような画面遷移リンクが常にプロトタイプ配下基準で解決される
+- CSS が効かないときは、まず DevTools か `curl` で `src/styles.css` が `/src/styles.css` に誤解決されていないか確認する
+
+例:
+
+```html
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>...</title>
+  <base href="/20260403_viewer-ux_basic-flow/">
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+```
+
 ### meta.json 必須フィールド
 
 ```json
@@ -151,6 +171,7 @@ window.AppUtils = { getParam, escHtml, buildNavbar };
 - [ ] ディレクトリ名が `YYYYMMDD_テーマ_説明` 形式
 - [ ] meta.json の必須フィールドがすべて揃っている
 - [ ] prototype/manifest.json の prototypes 配列に追記した
+- [ ] 各 HTML に `<base href="/YYYYMMDD_テーマ_説明/">` を入れ、末尾スラッシュなし URL でも CSS/JS が解決される
 - [ ] デザイン変数を使用している（黒多用なし）
 - [ ] 画面ナビが navbar で完結している
 - [ ] モックデータが window.AppData として公開されている
