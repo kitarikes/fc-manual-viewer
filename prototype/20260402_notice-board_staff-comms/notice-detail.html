@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>連絡事項詳細 — FC Manual Viewer</title>
+  <link rel="stylesheet" href="src/styles.css">
+  <style>
+    .detail-card {
+      background: #fff;
+      border: 1px solid var(--ivory-border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.375rem;
+      margin-top: 1.25rem;
+    }
+
+    .detail-card.is-urgent {
+      border-top: 4px solid var(--urgent-color);
+    }
+
+    .detail-card.is-important {
+      border-top: 4px solid var(--important-color);
+    }
+
+    .back-to-list {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-top: 1.5rem;
+      letter-spacing: 0.04em;
+      transition: color 0.15s;
+    }
+
+    .back-to-list:hover { color: var(--primary); }
+    .back-to-list svg { width: 13px; height: 13px; }
+
+    .not-found {
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--text-muted);
+    }
+
+    .not-found p { font-size: 0.85rem; line-height: 1.8; }
+    .not-found a { color: var(--gold); text-decoration: none; }
+    .not-found a:hover { color: var(--primary); }
+  </style>
+</head>
+<body>
+
+  <div id="navbar-root"></div>
+
+  <main class="page-main">
+    <div id="content-root">
+      <!-- JS で生成 -->
+    </div>
+  </main>
+
+  <script src="src/main.js"></script>
+  <script>
+    const { NOTICES } = window.AppData;
+    const { getParam, escHtml, priorityMeta, brandLabel, formatDate, buildNavbar } = window.AppUtils;
+
+    const noticeId = getParam('id');
+    const notice = NOTICES.find(n => n.id === noticeId);
+
+    // Navbar
+    document.getElementById('navbar-root').innerHTML = buildNavbar({
+      backHref: 'notices.html',
+      backLabel: '一覧へ',
+      breadcrumbs: ['連絡事項一覧', notice ? notice.title.replace(/【.*?】\s*/, '').substring(0, 20) + '…' : '詳細'],
+      title: 'FC Manual',
+    });
+
+    const contentRoot = document.getElementById('content-root');
+
+    if (!notice) {
+      contentRoot.innerHTML = `
+        <div class="not-found">
+          <p>連絡事項が見つかりませんでした。<br>
+          <a href="notices.html">連絡事項一覧に戻る</a></p>
+        </div>
+      `;
+    } else {
+      const pm = priorityMeta(notice.priority);
+      const urgentClass = notice.priority === 'urgent' ? ' is-urgent' : notice.priority === 'important' ? ' is-important' : '';
+      const bl = brandLabel(notice.brand);
+
+      // 本文を段落・見出しに軽く変換（■ → 太字、改行2回 → 段落区切り）
+      const formattedBody = escHtml(notice.body)
+        .replace(/■ ([^\n]+)/g, '<strong>■ $1</strong>')
+        .replace(/\n\n/g, '<br><br>')
+        .replace(/\n/g, '<br>');
+
+      contentRoot.innerHTML = `
+        <div class="detail-card${urgentClass}">
+          <!-- ヘッダー -->
+          <div class="notice-detail-header">
+            <div class="notice-detail-badges">
+              <span class="priority-badge ${escHtml(pm.class)}">${escHtml(pm.label)}</span>
+              <span class="notice-card-meta">
+                <span class="brand-tag">${escHtml(bl)}</span>
+              </span>
+            </div>
+            <h1 class="notice-detail-title">${escHtml(notice.title)}</h1>
+            <div class="notice-detail-meta">
+              <span>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13">
+                  <rect x="2" y="3" width="12" height="11" rx="1"/>
+                  <path d="M5 1v4M11 1v4M2 7h12"/>
+                </svg>
+                ${escHtml(formatDate(notice.date))}
+              </span>
+              <span>
+                <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="13" height="13">
+                  <circle cx="8" cy="6" r="3"/>
+                  <path d="M2 14c0-3 2.7-5 6-5s6 2 6 5"/>
+                </svg>
+                ${escHtml(notice.author)}
+              </span>
+            </div>
+          </div>
+
+          <!-- 本文 -->
+          <div class="notice-detail-body">${formattedBody}</div>
+
+          <!-- タグ -->
+          <div class="notice-tags">
+            ${notice.tags.map(t => `<span class="notice-tag">${escHtml(t)}</span>`).join('')}
+          </div>
+        </div>
+
+        <a class="back-to-list" href="notices.html">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M10 12l-4-4 4-4"/>
+          </svg>
+          連絡事項一覧に戻る
+        </a>
+      `;
+    }
+  </script>
+
+</body>
+</html>
