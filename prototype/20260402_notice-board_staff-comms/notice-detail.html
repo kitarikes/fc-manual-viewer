@@ -61,6 +61,7 @@
 
   <script src="src/main.js"></script>
   <script>
+    (() => {
     const { NOTICES } = window.AppData;
     const { getParam, escHtml, priorityMeta, brandLabel, formatDate, buildNavbar } = window.AppUtils;
 
@@ -141,6 +142,7 @@
         </a>
       `;
     }
+    })();
   </script>
 
 </body>

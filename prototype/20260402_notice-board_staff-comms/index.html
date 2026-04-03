@@ -99,6 +99,7 @@
 
   <script src="src/main.js"></script>
   <script>
+    (() => {
     const { BRANDS, NOTICES } = window.AppData;
     const { escHtml, priorityMeta, formatDate } = window.AppUtils;
 
@@ -151,6 +152,7 @@
         </div>
       </a>
     `).join('');
+    })();
   </script>
 
 </body>
