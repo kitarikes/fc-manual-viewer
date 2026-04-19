@@ -61,3 +61,15 @@ npx serve prototype
 ```
 
 その後、ブラウザで `http://localhost:3000` にアクセスしてください。
+
+## GitHub Pages への公開
+
+`main` ブランチへ push すると、GitHub Actions が `prototype/` 配下を `gh-pages` ブランチへデプロイします。
+
+### 初回の GitHub 設定
+
+1. GitHub リポジトリで `Settings` → `Pages` を開く
+2. `Source` は `Deploy from a branch` を選ぶ
+3. `Branch` は `gh-pages`、`Folder` は `/(root)` を選ぶ
+
+ワークフロー定義は [../.github/workflows/deploy.yml](/Users/kitaryousuke/Desktop/workspace/fc-manual-viewer/.github/workflows/deploy.yml) にあります。
