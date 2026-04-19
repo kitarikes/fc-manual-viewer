@@ -76,6 +76,39 @@ prototype/YYYYMMDD_テーマ_説明/
 </head>
 ```
 
+### 画面遷移リンクのURL規則（重要）
+
+`serve` は **`cleanUrls: true`** がデフォルトで、`*.html` へのリクエストを拡張子なし URL に 301 リダイレクトする。このとき **クエリパラメータが消える**。
+
+**NG（クエリが消える）:**
+```html
+<a href="index.html?brand=unagi">...</a>   <!-- → /プロト/ にリダイレクトされクエリ消滅 -->
+<a href="viewer.html?movie=foo">...</a>     <!-- → /プロト/viewer にリダイレクトされクエリ消滅 -->
+```
+
+**OK:**
+```html
+<!-- 同一ページへの遷移（index.html 内部リンク）はクエリのみ -->
+<a href="?brand=unagi">...</a>              <!-- → /プロト/?brand=unagi ✓ -->
+<a href="?brand=unagi&category=foo">...</a>
+
+<!-- 別ページ（viewer.html など）へのリンクも同様に serve.json で対処（後述） -->
+```
+
+`index.html` への戻るリンクは `href="."` を使う（`href="index.html"` はクエリなし遷移なので OK だが統一性のため `.` 推奨）。
+
+### serve.json の設定（必須）
+
+`prototype/serve.json` に以下を置く。これにより `viewer.html?...` のような別ページリンクのクエリも保持される。
+
+```json
+{
+  "cleanUrls": false
+}
+```
+
+設定を反映するには **サーバーの再起動が必要**。ファイルを追加しただけでは反映されない。
+
 ### meta.json 必須フィールド
 
 ```json
@@ -129,7 +162,11 @@ prototype/YYYYMMDD_テーマ_説明/
 
 ## src/main.js の構造
 
+**必ず IIFE で全体を囲む**。囲まないとグローバルスコープに `const BRANDS` 等が漏れ、各 HTML のインラインスクリプトで `const { BRANDS } = window.AppData;` と二重宣言になって `Identifier 'BRANDS' has already been declared` エラーが出る。
+
 ```js
+(function () {
+
 // モックデータ
 const BRANDS = [...];
 const CATEGORIES = [...];
@@ -149,6 +186,8 @@ function buildNavbar({ backHref, backLabel, breadcrumbs, title }) { ... }
 // グローバル公開
 window.AppData = { BRANDS, CATEGORIES, MOVIES };
 window.AppUtils = { getParam, escHtml, buildNavbar };
+
+})();
 ```
 
 参考実装: `prototype/20260403_viewer-ux_basic-flow/src/main.js`
@@ -172,6 +211,9 @@ window.AppUtils = { getParam, escHtml, buildNavbar };
 - [ ] meta.json の必須フィールドがすべて揃っている
 - [ ] prototype/manifest.json の prototypes 配列に追記した
 - [ ] 各 HTML に `<base href="/YYYYMMDD_テーマ_説明/">` を入れ、末尾スラッシュなし URL でも CSS/JS が解決される
+- [ ] `prototype/serve.json` に `{"cleanUrls": false}` が存在する（サーバー再起動が必要）
+- [ ] 同一ページ内の画面遷移リンクは `?brand=...` 形式（`index.html?...` は使わない）
+- [ ] `src/main.js` が IIFE `(function(){...})()` で囲まれている（グローバル変数汚染防止）
 - [ ] デザイン変数を使用している（黒多用なし）
 - [ ] 画面ナビが navbar で完結している
 - [ ] モックデータが window.AppData として公開されている
