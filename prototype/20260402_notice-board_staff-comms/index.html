@@ -46,7 +46,6 @@
 
   <!-- Hero -->
   <div class="hero">
-    <div class="hero-mon">⛩</div>
     <p class="hero-label">FC Manual Viewer</p>
     <h1 class="hero-title">味和商店<br>スタッフポータル</h1>
     <p class="hero-subtitle">マニュアル・連絡事項を確認できます</p>
@@ -61,11 +60,10 @@
     <!-- 連絡事項リンク -->
     <div class="top-section">
       <div class="section-header">
-        <h2 class="section-title">📢 連絡事項</h2>
+        <h2 class="section-title">連絡事項</h2>
       </div>
       <a class="notices-link-block" href="notices/">
         <div class="notices-link-block-left">
-          <div class="notices-link-icon">📋</div>
           <div>
             <div class="notices-link-label">連絡事項一覧</div>
             <div class="notices-link-sub" id="notices-count-label">本部からのお知らせを確認する</div>
@@ -80,7 +78,7 @@
     <!-- 業態一覧 -->
     <div class="top-section">
       <div class="section-header">
-        <h2 class="section-title">📖 業態一覧</h2>
+        <h2 class="section-title">業態一覧</h2>
         <span style="font-size:0.72rem;color:var(--text-muted);">マニュアルを開く</span>
       </div>
 
@@ -139,7 +137,6 @@
     const grid = document.getElementById('brand-grid');
     grid.innerHTML = BRANDS.map(b => `
       <a class="brand-card" href="../20260403_viewer-ux_basic-flow/?brand=${escHtml(b.slug)}">
-        <div class="brand-icon">${b.icon}</div>
         <h2 class="brand-name">${escHtml(b.name)}</h2>
         <p class="brand-desc">${escHtml(b.description)}</p>
         <div class="brand-card-footer">
