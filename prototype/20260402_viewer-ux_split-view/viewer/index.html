@@ -183,7 +183,6 @@
           </div>`;
       } else {
         // YouTube embed
-        // allowfullscreen は属性のみ（値なし）で正しく動作する
         wrap.innerHTML = `
           <iframe
             id="video-frame"
@@ -274,7 +273,7 @@
     function renderError() {
       document.getElementById('navbar-root').innerHTML = `
         <nav class="navbar">
-          <a href="index.html" class="nav-back">
+          <a href="." class="nav-back">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M10 12l-4-4 4-4"/>
             </svg>

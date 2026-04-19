@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FC Manual Viewer</title>
+  <base href="/20260402_viewer-ux_split-view/">
   <link rel="stylesheet" href="src/styles.css">
 </head>
 <body>
@@ -55,7 +56,7 @@
         <h2 class="section-heading">業態一覧</h2>
         <div class="brand-grid">
           ${BRANDS.map(b => `
-            <a class="brand-card" href="index.html?brand=${escHtml(b.slug)}">
+            <a class="brand-card" href="?brand=${escHtml(b.slug)}">
               <div class="brand-icon">${escHtml(b.icon)}</div>
               <p class="brand-name">${escHtml(b.name)}</p>
               <p class="brand-desc">${escHtml(b.description)}</p>
@@ -84,7 +85,7 @@
 
       document.getElementById('navbar-root').innerHTML = `
         <nav class="navbar">
-          <a href="index.html" class="nav-back">
+          <a href="." class="nav-back">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M10 12l-4-4 4-4"/>
             </svg>
@@ -112,7 +113,7 @@
           ${cats.map(c => {
             const count = MOVIES.filter(m => m.categoryId === c.id).length;
             return `
-              <a class="category-card" href="index.html?brand=${escHtml(brandSlug)}&category=${escHtml(c.slug)}">
+              <a class="category-card" href="?brand=${escHtml(brandSlug)}&category=${escHtml(c.slug)}">
                 <div class="category-emoji">${escHtml(c.icon)}</div>
                 <p class="category-name">${escHtml(c.name)}</p>
                 <p class="category-desc">${escHtml(c.description)}</p>
@@ -136,7 +137,7 @@
 
       document.getElementById('navbar-root').innerHTML = `
         <nav class="navbar">
-          <a href="index.html?brand=${escHtml(brandSlug)}" class="nav-back">
+          <a href="?brand=${escHtml(brandSlug)}" class="nav-back">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M10 12l-4-4 4-4"/>
             </svg>
@@ -171,7 +172,7 @@
         <div class="movie-list">
           ${movies.map(m => `
             <a class="movie-item"
-               href="viewer.html?brand=${escHtml(brandSlug)}&category=${escHtml(categorySlug)}&movie=${escHtml(m.id)}">
+               href="viewer/?brand=${escHtml(brandSlug)}&category=${escHtml(categorySlug)}&movie=${escHtml(m.id)}">
               <div class="movie-item-left">
                 <span class="movie-difficulty difficulty-${m.difficulty}">
                   ${difficultyLabel(m.difficulty)}

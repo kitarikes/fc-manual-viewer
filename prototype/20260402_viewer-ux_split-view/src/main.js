@@ -5,6 +5,8 @@
  * URLパラメータによるページ内状態管理を実現する。
  */
 
+(function () {
+
 // ============================================================
 // Mock Data
 // ============================================================
@@ -238,3 +240,5 @@ function formatDuration(seconds) {
 
 window.AppData = { BRANDS, CATEGORIES, MOVIES, SEQUENCES };
 window.AppUtils = { getParam, escHtml, difficultyLabel, formatDuration };
+
+})();
