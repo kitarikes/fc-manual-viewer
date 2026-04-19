@@ -77,16 +77,16 @@
       </a>
     </div>
 
-    <!-- ブランド選択 -->
+    <!-- 業態一覧 -->
     <div class="top-section">
       <div class="section-header">
-        <h2 class="section-title">📖 マニュアル</h2>
-        <span style="font-size:0.72rem;color:var(--text-muted);">業態を選択</span>
+        <h2 class="section-title">📖 業態一覧</h2>
+        <span style="font-size:0.72rem;color:var(--text-muted);">マニュアルを開く</span>
       </div>
 
       <div class="select-prompt">
         <div class="divider"></div>
-        <p>ご担当の業態のマニュアルを閲覧できます</p>
+        <p>ご担当の業態を選ぶと、そのままマニュアル一覧へ進めます</p>
         <div class="divider"></div>
       </div>
 
@@ -138,13 +138,13 @@
     // ブランドグリッド
     const grid = document.getElementById('brand-grid');
     grid.innerHTML = BRANDS.map(b => `
-      <a class="brand-card" href="../20260403_viewer-ux_basic-flow/category.html?brand=${escHtml(b.slug)}">
+      <a class="brand-card" href="../20260403_viewer-ux_basic-flow/?brand=${escHtml(b.slug)}">
         <div class="brand-icon">${b.icon}</div>
         <h2 class="brand-name">${escHtml(b.name)}</h2>
         <p class="brand-desc">${escHtml(b.description)}</p>
         <div class="brand-card-footer">
           <span class="arrow-cta">
-            マニュアルへ
+            この業態を開く
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M3 8h10M9 4l4 4-4 4"/>
             </svg>
