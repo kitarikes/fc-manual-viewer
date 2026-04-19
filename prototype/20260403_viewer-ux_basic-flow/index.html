@@ -64,7 +64,7 @@
       document.getElementById('page-header-root').innerHTML = `
         <div class="page-header">
           <div class="page-header-inner">
-            <p class="page-label">${escHtml(brand.icon)} ${escHtml(brand.name)}</p>
+            <p class="page-label">${escHtml(brand.name)}</p>
             <h1>カテゴリを選んでください</h1>
             <p>閲覧したいマニュアルのカテゴリを選択してください。</p>
           </div>
@@ -78,7 +78,6 @@
             const count = MOVIES.filter(m => m.categoryId === c.id).length;
             return `
               <a class="category-card" href="?brand=${escHtml(brandSlug)}&category=${escHtml(c.slug)}">
-                <div class="category-emoji">${escHtml(c.icon)}</div>
                 <p class="category-name">${escHtml(c.name)}</p>
                 <p class="category-desc">${escHtml(c.description)}</p>
                 <p class="category-meta">${count > 0 ? `${count}本のマニュアル` : '準備中'}</p>
@@ -125,7 +124,7 @@
       document.getElementById('page-header-root').innerHTML = `
         <div class="page-header">
           <div class="page-header-inner">
-            <p class="page-label">${escHtml(category.icon)} ${escHtml(category.name)}</p>
+            <p class="page-label">${escHtml(category.name)}</p>
             <h1>${escHtml(category.name)}</h1>
             <p>${escHtml(category.description)}</p>
           </div>
