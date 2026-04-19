@@ -44,7 +44,7 @@ export interface VideoSource {
 
 /**
  * ブランド（飲食業態）
- * 例: うなぎ業態, ラーメン業態
+ * 例: 鰻のエイト, GYOKOTSUYA
  * FC展開では複数ブランドが1プラットフォーム上に共存する
  */
 export interface Brand {

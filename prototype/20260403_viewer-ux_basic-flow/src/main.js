@@ -14,14 +14,14 @@
 const BRANDS = [
   {
     id: 'unagi',
-    name: 'うなぎ業態',
+    name: '鰻のエイト',
     slug: 'unagi',
     description: 'うなぎ専門店グループのオペレーションマニュアル。\n捌き・仕込み・焼き・盛り付けの全工程を網羅。',
-    icon: '🐟',
+    icon: '🍱',
   },
   {
     id: 'ramen',
-    name: 'ラーメン業態',
+    name: 'GYOKOTSUYA',
     slug: 'ramen',
     description: '醤油・塩・味噌ラーメン専門店グループのオペレーションマニュアル。\nスープから麺の茹で方まで詳細に解説。',
     icon: '🍜',

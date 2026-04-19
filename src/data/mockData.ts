@@ -22,7 +22,7 @@ import type {
 export const brands: Brand[] = [
   {
     id: 'unagi',
-    name: 'うなぎ業態',
+    name: '鰻のエイト',
     slug: 'unagi',
     description: 'うなぎ専門店グループのオペレーションマニュアル',
     themeColor: '#8B4513',
@@ -32,7 +32,7 @@ export const brands: Brand[] = [
   },
   {
     id: 'ramen',
-    name: 'ラーメン業態',
+    name: 'GYOKOTSUYA',
     slug: 'ramen',
     description: '醤油・塩・味噌ラーメン専門店グループのオペレーションマニュアル',
     themeColor: '#CC3300',
@@ -47,7 +47,7 @@ export const brands: Brand[] = [
 // ============================================================
 
 export const categories: Category[] = [
-  // ----- うなぎ業態 -----
+  // ----- 鰻のエイト -----
   {
     id: 'eel-processing',
     brandId: 'unagi',
@@ -88,7 +88,7 @@ export const categories: Category[] = [
     displayOrder: 4,
     isActive: true,
   },
-  // ----- ラーメン業態 -----
+  // ----- GYOKOTSUYA -----
   {
     id: 'soup-base',
     brandId: 'ramen',
