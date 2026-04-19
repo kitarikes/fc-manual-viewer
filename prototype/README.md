@@ -72,4 +72,4 @@ npx serve prototype
 2. `Source` は `Deploy from a branch` を選ぶ
 3. `Branch` は `gh-pages`、`Folder` は `/(root)` を選ぶ
 
-ワークフロー定義は [../.github/workflows/deploy.yml](/Users/kitaryousuke/Desktop/workspace/fc-manual-viewer/.github/workflows/deploy.yml) にあります。
+ワークフロー定義は `../.github/workflows/deploy.yml` にあります。
