@@ -7,11 +7,7 @@
 </head>
 <body>
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const target = params.get('movie')
-      ? './viewer/?' + params.toString()
-      : './?' + params.toString();
-    window.location.replace(target);
+    window.location.replace('../' + window.location.search + window.location.hash);
   </script>
 </body>
 </html>

@@ -3,155 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ブランド選択 — FC Manual Viewer</title>
+  <title>FC Manual Viewer</title>
   <base href="/20260403_viewer-ux_basic-flow/">
-  <link rel="stylesheet" href="src/styles.css">
-  <style>
-    /* ページ固有スタイル */
-    .hero {
-      background-color: var(--primary);
-      text-align: center;
-      padding: 4rem 2rem 3.5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(201, 145, 74, 0.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), var(--gold-light), var(--gold), transparent);
-    }
-
-    .hero-mon {
-      font-size: 2.5rem;
-      margin-bottom: 1.25rem;
-      line-height: 1;
-    }
-
-    .hero-label {
-      font-family: var(--sans);
-      font-size: 0.65rem;
-      font-weight: 400;
-      letter-spacing: 0.35em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 0.75rem;
-    }
-
-    .hero-title {
-      font-family: var(--serif);
-      font-size: 2rem;
-      font-weight: 300;
-      color: var(--ivory);
-      letter-spacing: 0.08em;
-      line-height: 1.4;
-      margin-bottom: 0.75rem;
-    }
-
-    .hero-subtitle {
-      font-family: var(--sans);
-      font-size: 0.78rem;
-      color: rgba(253, 248, 240, 0.6);
-      font-weight: 300;
-      letter-spacing: 0.08em;
-    }
-
-    .select-prompt {
-      text-align: center;
-      margin-bottom: 1.25rem;
-    }
-
-    .select-prompt p {
-      font-family: var(--serif);
-      font-size: 0.9rem;
-      color: var(--text-sub);
-      font-weight: 400;
-      letter-spacing: 0.08em;
-    }
-
-    .divider {
-      width: 3rem;
-      height: 1px;
-      background: var(--gold);
-      margin: 0.75rem auto;
-    }
-  </style>
+  <link rel="stylesheet" href="src/styles.css?v=20260419">
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <a href="../../index.html" class="nav-back">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M10 12l-4-4 4-4"/>
-      </svg>
-      ギャラリーへ
-    </a>
-    <div class="nav-breadcrumb">
-      <span>マニュアル閲覧 UX 基本フロー</span>
-    </div>
-    <span class="navbar-title">FC Manual Viewer</span>
-  </nav>
-
-  <!-- Hero -->
-  <div class="hero">
-    <div class="hero-mon">⛩</div>
-    <p class="hero-label">FC Manual Viewer</p>
-    <h1 class="hero-title">オペレーション<br>マニュアル</h1>
-    <p class="hero-subtitle">業態を選択してください</p>
-  </div>
-
-  <!-- Main -->
-  <main class="page-main">
-    <div class="select-prompt">
-      <div class="divider"></div>
-      <p>ご担当の業態をお選びください</p>
-      <div class="divider"></div>
-    </div>
-
-    <div class="brand-grid" id="brand-grid">
-      <!-- JS で生成 -->
-    </div>
+  <div id="navbar-root"></div>
+  <div id="page-header-root"></div>
+  <main class="page-main" id="page-main">
+    <p class="loading">読み込み中…</p>
   </main>
 
-  <script src="src/main.js"></script>
+  <script src="src/main.js?v=20260419"></script>
   <script>
-    const { BRANDS } = window.AppData;
-    const { escHtml } = window.AppUtils;
+    const { BRANDS, CATEGORIES, MOVIES } = window.AppData;
+    const { getParam, escHtml, difficultyLabel } = window.AppUtils;
 
-    const grid = document.getElementById('brand-grid');
-    grid.innerHTML = BRANDS.map(b => `
-      <a class="brand-card" href="category.html?brand=${escHtml(b.slug)}">
-        <div class="brand-icon">${b.icon}</div>
-        <h2 class="brand-name">${escHtml(b.name)}</h2>
-        <p class="brand-desc">${escHtml(b.description).replace(/\n/g, '<br>')}</p>
-        <div class="brand-card-footer">
-          <span class="arrow-cta">
-            カテゴリへ
+    const brandSlug    = getParam('brand');
+    const categorySlug = getParam('category');
+
+    if (!brandSlug) {
+      renderBrands();
+    } else if (!categorySlug) {
+      renderCategories();
+    } else {
+      renderMovies();
+    }
+
+    // ============================================================
+    // ブランド選択
+    // ============================================================
+    function renderBrands() {
+      document.title = 'FC Manual Viewer';
+
+      document.getElementById('navbar-root').innerHTML = `
+        <nav class="navbar">
+          <span class="navbar-title">FC Manual Viewer</span>
+        </nav>`;
+
+      document.getElementById('page-header-root').innerHTML = `
+        <div class="page-header">
+          <div class="page-header-inner">
+            <p class="page-label">Manual System</p>
+            <h1>業態を選んでください</h1>
+            <p>閲覧するマニュアルの業態を選択してください。</p>
+          </div>
+        </div>`;
+
+      document.getElementById('page-main').innerHTML = `
+        <p class="section-label">Brands</p>
+        <h2 class="section-heading">業態一覧</h2>
+        <div class="brand-grid">
+          ${BRANDS.map(b => `
+            <a class="brand-card" href="?brand=${escHtml(b.slug)}">
+              <div class="brand-icon">${escHtml(b.icon)}</div>
+              <p class="brand-name">${escHtml(b.name)}</p>
+              <p class="brand-desc">${escHtml(b.description)}</p>
+              <div class="brand-card-footer">
+                <span class="arrow-cta">
+                  マニュアルを見る
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 8h10M9 4l4 4-4 4"/>
+                  </svg>
+                </span>
+              </div>
+            </a>
+          `).join('')}
+        </div>`;
+    }
+
+    // ============================================================
+    // カテゴリ選択
+    // ============================================================
+    function renderCategories() {
+      const brand = BRANDS.find(b => b.slug === brandSlug);
+      if (!brand) { location.href = 'index.html'; return; }
+
+      const cats = CATEGORIES.filter(c => c.brandId === brand.id);
+      document.title = `${brand.name} — FC Manual Viewer`;
+
+      document.getElementById('navbar-root').innerHTML = `
+        <nav class="navbar">
+          <a href="." class="nav-back">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M3 8h10M9 4l4 4-4 4"/>
+              <path d="M10 12l-4-4 4-4"/>
             </svg>
-          </span>
-        </div>
-      </a>
-    `).join('');
+            業態選択
+          </a>
+          <div class="nav-breadcrumb">
+            <span class="nav-current">${escHtml(brand.name)}</span>
+          </div>
+          <span class="navbar-title">FC Manual Viewer</span>
+        </nav>`;
+
+      document.getElementById('page-header-root').innerHTML = `
+        <div class="page-header">
+          <div class="page-header-inner">
+            <p class="page-label">${escHtml(brand.icon)} ${escHtml(brand.name)}</p>
+            <h1>カテゴリを選んでください</h1>
+            <p>閲覧したいマニュアルのカテゴリを選択してください。</p>
+          </div>
+        </div>`;
+
+      document.getElementById('page-main').innerHTML = `
+        <p class="section-label">Categories</p>
+        <h2 class="section-heading">${cats.length}カテゴリ</h2>
+        <div class="category-grid">
+          ${cats.map(c => {
+            const count = MOVIES.filter(m => m.categoryId === c.id).length;
+            return `
+              <a class="category-card" href="?brand=${escHtml(brandSlug)}&category=${escHtml(c.slug)}">
+                <div class="category-emoji">${escHtml(c.icon)}</div>
+                <p class="category-name">${escHtml(c.name)}</p>
+                <p class="category-desc">${escHtml(c.description)}</p>
+                <p class="category-meta">${count > 0 ? `${count}本のマニュアル` : '準備中'}</p>
+              </a>`;
+          }).join('')}
+        </div>`;
+    }
+
+    // ============================================================
+    // マニュアル一覧
+    // ============================================================
+    function renderMovies() {
+      const brand = BRANDS.find(b => b.slug === brandSlug);
+      const category = CATEGORIES.find(c => c.slug === categorySlug && c.brandId === brand?.id);
+
+      if (!brand || !category) { location.href = 'index.html'; return; }
+
+      const movies = MOVIES.filter(m => m.categoryId === category.id);
+      document.title = `${category.name} — ${brand.name}`;
+
+      document.getElementById('navbar-root').innerHTML = `
+        <nav class="navbar">
+          <a href="?brand=${escHtml(brandSlug)}" class="nav-back">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M10 12l-4-4 4-4"/>
+            </svg>
+            カテゴリ一覧
+          </a>
+          <div class="nav-breadcrumb">
+            <span class="nav-brand-name">${escHtml(brand.name)}</span>
+            <span class="sep"> › </span>
+            <span class="nav-current">${escHtml(category.name)}</span>
+          </div>
+          <span class="navbar-title">FC Manual Viewer</span>
+        </nav>`;
+
+      document.getElementById('page-header-root').innerHTML = `
+        <div class="page-header">
+          <div class="page-header-inner">
+            <p class="page-label">${escHtml(category.icon)} ${escHtml(category.name)}</p>
+            <h1>${escHtml(category.name)}</h1>
+            <p>${escHtml(category.description)}</p>
+          </div>
+        </div>`;
+
+      if (movies.length === 0) {
+        document.getElementById('page-main').innerHTML = `
+          <p class="loading">このカテゴリのマニュアルは現在準備中です。</p>`;
+        return;
+      }
+
+      document.getElementById('page-main').innerHTML = `
+        <p class="section-label">Manuals</p>
+        <h2 class="section-heading">${movies.length}本のマニュアル</h2>
+        <div class="movie-list">
+          ${movies.map(m => `
+            <a class="movie-item"
+               href="viewer/?brand=${escHtml(brandSlug)}&category=${escHtml(categorySlug)}&movie=${escHtml(m.id)}">
+              <div class="movie-item-left">
+                <span class="movie-difficulty difficulty-${m.difficulty}">
+                  ${difficultyLabel(m.difficulty)}
+                </span>
+                <h3 class="movie-title">${escHtml(m.title)}</h3>
+                <p class="movie-desc">${escHtml(m.description)}</p>
+                <div class="movie-meta-row">
+                  <span class="movie-meta-badge">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/>
+                    </svg>
+                    約${m.estimatedMinutes}分
+                  </span>
+                  <span class="movie-meta-badge">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M2 4h12M2 8h8M2 12h5"/>
+                    </svg>
+                    ${m.totalSteps}ステップ
+                  </span>
+                </div>
+                <div class="movie-tags">
+                  ${m.tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}
+                </div>
+              </div>
+              <div class="movie-item-right">
+                <span class="arrow-cta">
+                  見る
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 8h10M9 4l4 4-4 4"/>
+                  </svg>
+                </span>
+              </div>
+            </a>
+          `).join('')}
+        </div>`;
+    }
   </script>
 
 </body>

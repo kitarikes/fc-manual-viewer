@@ -9,8 +9,8 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const target = params.get('movie')
-      ? './viewer/?' + params.toString()
-      : './?' + params.toString();
+      ? '../viewer/?' + params.toString() + window.location.hash
+      : '../?' + params.toString() + window.location.hash;
     window.location.replace(target);
   </script>
 </body>
