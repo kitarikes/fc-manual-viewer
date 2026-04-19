@@ -17,6 +17,7 @@
 
   <script src="src/main.js?v=20260419"></script>
   <script>
+    const STAFF_PORTAL_URL = '/20260402_notice-board_staff-comms/';
     const { BRANDS, CATEGORIES, MOVIES } = window.AppData;
     const { getParam, escHtml, difficultyLabel } = window.AppUtils;
 
@@ -24,7 +25,7 @@
     const categorySlug = getParam('category');
 
     if (!brandSlug) {
-      renderBrands();
+      window.location.replace(STAFF_PORTAL_URL);
     } else if (!categorySlug) {
       renderCategories();
     } else {
@@ -32,66 +33,29 @@
     }
 
     // ============================================================
-    // ブランド選択
-    // ============================================================
-    function renderBrands() {
-      document.title = 'FC Manual Viewer';
-
-      document.getElementById('navbar-root').innerHTML = `
-        <nav class="navbar">
-          <span class="navbar-title">FC Manual Viewer</span>
-        </nav>`;
-
-      document.getElementById('page-header-root').innerHTML = `
-        <div class="page-header">
-          <div class="page-header-inner">
-            <p class="page-label">Manual System</p>
-            <h1>業態を選んでください</h1>
-            <p>閲覧するマニュアルの業態を選択してください。</p>
-          </div>
-        </div>`;
-
-      document.getElementById('page-main').innerHTML = `
-        <p class="section-label">Brands</p>
-        <h2 class="section-heading">業態一覧</h2>
-        <div class="brand-grid">
-          ${BRANDS.map(b => `
-            <a class="brand-card" href="?brand=${escHtml(b.slug)}">
-              <div class="brand-icon">${escHtml(b.icon)}</div>
-              <p class="brand-name">${escHtml(b.name)}</p>
-              <p class="brand-desc">${escHtml(b.description)}</p>
-              <div class="brand-card-footer">
-                <span class="arrow-cta">
-                  マニュアルを見る
-                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M3 8h10M9 4l4 4-4 4"/>
-                  </svg>
-                </span>
-              </div>
-            </a>
-          `).join('')}
-        </div>`;
-    }
-
-    // ============================================================
     // カテゴリ選択
     // ============================================================
     function renderCategories() {
       const brand = BRANDS.find(b => b.slug === brandSlug);
-      if (!brand) { location.href = 'index.html'; return; }
+      if (!brand) {
+        window.location.replace(STAFF_PORTAL_URL);
+        return;
+      }
 
       const cats = CATEGORIES.filter(c => c.brandId === brand.id);
       document.title = `${brand.name} — FC Manual Viewer`;
 
       document.getElementById('navbar-root').innerHTML = `
         <nav class="navbar">
-          <a href="." class="nav-back">
+          <a href="${STAFF_PORTAL_URL}" class="nav-back">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M10 12l-4-4 4-4"/>
             </svg>
-            業態選択
+            スタッフポータル
           </a>
           <div class="nav-breadcrumb">
+            <span class="nav-brand-name">スタッフポータル</span>
+            <span class="sep"> › </span>
             <span class="nav-current">${escHtml(brand.name)}</span>
           </div>
           <span class="navbar-title">FC Manual Viewer</span>
@@ -130,7 +94,14 @@
       const brand = BRANDS.find(b => b.slug === brandSlug);
       const category = CATEGORIES.find(c => c.slug === categorySlug && c.brandId === brand?.id);
 
-      if (!brand || !category) { location.href = 'index.html'; return; }
+      if (!brand) {
+        window.location.replace(STAFF_PORTAL_URL);
+        return;
+      }
+      if (!category) {
+        window.location.replace(`?brand=${encodeURIComponent(brandSlug)}`);
+        return;
+      }
 
       const movies = MOVIES.filter(m => m.categoryId === category.id);
       document.title = `${category.name} — ${brand.name}`;

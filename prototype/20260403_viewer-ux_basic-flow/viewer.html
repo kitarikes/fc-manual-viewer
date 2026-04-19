@@ -41,6 +41,7 @@
 
   <script src="src/main.js?v=20260419"></script>
   <script>
+    const STAFF_PORTAL_URL = '/20260402_notice-board_staff-comms/';
     const { BRANDS, CATEGORIES, MOVIES, SEQUENCES } = window.AppData;
     const { getParam, escHtml, difficultyLabel, formatDuration } = window.AppUtils;
 
@@ -80,6 +81,8 @@
             一覧へ戻る
           </a>
           <div class="nav-breadcrumb">
+            <span class="nav-brand-name">スタッフポータル</span>
+            <span class="sep"> › </span>
             <span class="nav-brand-name">${escHtml(brand.name)}</span>
             <span class="sep"> › </span>
             <span class="nav-brand-name">${escHtml(category.name)}</span>
@@ -274,18 +277,18 @@
     function renderError() {
       document.getElementById('navbar-root').innerHTML = `
         <nav class="navbar">
-          <a href="index.html" class="nav-back">
+          <a href="${STAFF_PORTAL_URL}" class="nav-back">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
               <path d="M10 12l-4-4 4-4"/>
             </svg>
-            トップへ
+            スタッフポータル
           </a>
           <span class="navbar-title">FC Manual Viewer</span>
         </nav>`;
 
       document.getElementById('viewer-wrap').innerHTML =
         '<p class="loading">マニュアルが見つかりませんでした。<br>'
-        + '<a href="." style="color:var(--gold)">トップへ戻る</a></p>';
+        + '<a href="' + STAFF_PORTAL_URL + '" style="color:var(--gold)">スタッフポータルへ戻る</a></p>';
     }
 
     // グローバル公開
