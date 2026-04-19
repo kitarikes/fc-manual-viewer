@@ -51,7 +51,6 @@
   <div id="navbar-root"></div>
 
   <main class="page-main">
-    <!-- ページタイトル -->
     <div class="page-title-block">
       <div class="divider"></div>
       <h1 class="page-title">連絡事項</h1>
@@ -59,21 +58,13 @@
       <div class="divider"></div>
     </div>
 
-    <!-- フィルタ -->
     <div class="filter-section">
       <div class="filter-label">絞り込み</div>
-      <div class="filter-bar" id="filter-bar">
-        <!-- JS で生成 -->
-      </div>
+      <div class="filter-bar" id="filter-bar"></div>
     </div>
 
-    <!-- 件数 -->
     <div class="result-count" id="result-count"></div>
-
-    <!-- 連絡事項リスト -->
-    <div class="notice-list" id="notice-list">
-      <!-- JS で生成 -->
-    </div>
+    <div class="notice-list" id="notice-list"></div>
   </main>
 
   <script src="src/main.js"></script>
@@ -82,7 +73,6 @@
     const { BRANDS, NOTICES } = window.AppData;
     const { getParam, escHtml, priorityMeta, brandLabel, formatDate, buildNavbar } = window.AppUtils;
 
-    // Navbar
     document.getElementById('navbar-root').innerHTML = buildNavbar({
       backHref: './',
       backLabel: 'トップへ',
@@ -90,10 +80,8 @@
       title: 'FC Manual',
     });
 
-    // 現在のフィルタ状態
     let currentBrand = getParam('brand') || 'all';
 
-    // フィルタボタン生成
     const filterDefs = [
       { id: 'all', label: 'すべて' },
       ...BRANDS.map(b => ({ id: b.id, label: b.name })),
@@ -111,7 +99,6 @@
       bar.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           currentBrand = btn.dataset.brand;
-          // URL を更新（ページリロードなし）
           const url = new URL(window.location.href);
           if (currentBrand === 'all') {
             url.searchParams.delete('brand');
@@ -125,7 +112,6 @@
       });
     }
 
-    // 優先度ソート順
     const priorityOrder = { urgent: 0, important: 1, normal: 2 };
 
     function renderNotices() {
@@ -133,11 +119,9 @@
         .filter(n => currentBrand === 'all' || n.brand === 'all' || n.brand === currentBrand)
         .sort((a, b) => (priorityOrder[a.priority] ?? 9) - (priorityOrder[b.priority] ?? 9));
 
-      const countEl = document.getElementById('result-count');
-      countEl.textContent = `${filtered.length} 件`;
+      document.getElementById('result-count').textContent = `${filtered.length} 件`;
 
       const list = document.getElementById('notice-list');
-
       if (filtered.length === 0) {
         list.innerHTML = `
           <div class="empty-state">

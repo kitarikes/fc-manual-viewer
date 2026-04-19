@@ -54,9 +54,7 @@
   <div id="navbar-root"></div>
 
   <main class="page-main">
-    <div id="content-root">
-      <!-- JS で生成 -->
-    </div>
+    <div id="content-root"></div>
   </main>
 
   <script src="src/main.js"></script>
@@ -68,7 +66,6 @@
     const noticeId = getParam('id');
     const notice = NOTICES.find(n => n.id === noticeId);
 
-    // Navbar
     document.getElementById('navbar-root').innerHTML = buildNavbar({
       backHref: 'notices/',
       backLabel: '一覧へ',
@@ -89,8 +86,6 @@
       const pm = priorityMeta(notice.priority);
       const urgentClass = notice.priority === 'urgent' ? ' is-urgent' : notice.priority === 'important' ? ' is-important' : '';
       const bl = brandLabel(notice.brand);
-
-      // 本文を段落・見出しに軽く変換（■ → 太字、改行2回 → 段落区切り）
       const formattedBody = escHtml(notice.body)
         .replace(/■ ([^\n]+)/g, '<strong>■ $1</strong>')
         .replace(/\n\n/g, '<br><br>')
@@ -98,7 +93,6 @@
 
       contentRoot.innerHTML = `
         <div class="detail-card${urgentClass}">
-          <!-- ヘッダー -->
           <div class="notice-detail-header">
             <div class="notice-detail-badges">
               <span class="priority-badge ${escHtml(pm.class)}">${escHtml(pm.label)}</span>
@@ -125,10 +119,8 @@
             </div>
           </div>
 
-          <!-- 本文 -->
           <div class="notice-detail-body">${formattedBody}</div>
 
-          <!-- タグ -->
           <div class="notice-tags">
             ${notice.tags.map(t => `<span class="notice-tag">${escHtml(t)}</span>`).join('')}
           </div>

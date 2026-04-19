@@ -63,7 +63,7 @@
       <div class="section-header">
         <h2 class="section-title">📢 連絡事項</h2>
       </div>
-      <a class="notices-link-block" href="notices.html">
+      <a class="notices-link-block" href="notices/">
         <div class="notices-link-block-left">
           <div class="notices-link-icon">📋</div>
           <div>
@@ -111,7 +111,7 @@
       const n = urgentNotices[0];
       const pm = priorityMeta(n.priority);
       urgentArea.innerHTML = `
-        <a class="urgent-banner" href="notice-detail.html?id=${escHtml(n.id)}">
+        <a class="urgent-banner" href="notice-detail/?id=${escHtml(n.id)}">
           <div class="urgent-banner-header">
             <span class="priority-badge ${escHtml(pm.class)}">${escHtml(pm.label)}</span>
             <span class="urgent-banner-title">${escHtml(n.title)}</span>
