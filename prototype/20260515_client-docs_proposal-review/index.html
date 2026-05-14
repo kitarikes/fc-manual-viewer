@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提案資料 — 味和商店 マニュアル閲覧システム</title>
+  <base href="/20260515_client-docs_proposal-review/">
+  <link rel="stylesheet" href="src/styles.css">
+  <style>
+    .top-description {
+      background: white;
+      border: 1px solid var(--ivory-border);
+      border-radius: 8px;
+      padding: 28px 32px;
+      margin-bottom: 40px;
+    }
+    .top-description h2 {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: var(--primary);
+      margin: 0 0 12px;
+    }
+    .top-description p {
+      font-size: 14px;
+      color: var(--text-sub);
+      margin: 0;
+      line-height: 1.8;
+    }
+    .reading-order {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .reading-order::before {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 1px;
+      background: var(--gold);
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="header-label">Proposal — Confidential</div>
+    <h1 class="header-title">味和商店<br>マニュアル閲覧システム</h1>
+    <div class="header-meta">
+      <span>作成日：2026-05-15</span>
+      <span>作成者：喜多亮介</span>
+      <span>ステータス：原案（レビュー前）</span>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="top-description">
+      <h2>本資料について</h2>
+      <p>
+        本提案資料は、味和商店向けマニュアル閲覧システムの開発に関する3つの文書で構成されています。<br>
+        読み合わせ会では、下記の順番でご確認をお願いいたします。
+      </p>
+      <div class="reading-order">読み合わせの順番：要求整理 → プロジェクトスケジュール → 見積もり</div>
+    </div>
+
+    <div class="doc-grid">
+      <a href="requirements.html" class="doc-card">
+        <div class="doc-number">01</div>
+        <h2>要求整理</h2>
+        <p>アクター定義と、フェーズ1〜5の全ユースケース一覧。何を・誰のために・どの順番で作るかを定義します。</p>
+        <div class="doc-tag">Phase 1〜5 ＋ エンハンス（将来検討）</div>
+      </a>
+      <a href="schedule.html" class="doc-card">
+        <div class="doc-number">02</div>
+        <h2>プロジェクトスケジュール</h2>
+        <p>スプリント単位（2週間）の開発ロードマップとマイルストーン。全体像を把握できます。</p>
+        <div class="doc-tag">2026-05-25 〜 2026-10-11（約5.5ヶ月）</div>
+      </a>
+      <a href="estimate.html" class="doc-card">
+        <div class="doc-number">03</div>
+        <h2>見積もり（原案）</h2>
+        <p>フェーズ完了払い方式の費用計画。各フェーズの対象ユースケースと完了条件も明記。</p>
+        <div class="doc-tag">総額 1,000,000円（税別）</div>
+      </a>
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <p>本資料は原案です。内容は変更になる場合があります。</p>
+  </footer>
+  <script src="src/main.js"></script>
+</body>
+</html>

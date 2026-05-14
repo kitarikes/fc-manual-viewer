@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>要求整理 — 味和商店 マニュアル閲覧システム</title>
+  <base href="/20260515_client-docs_proposal-review/">
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <header class="page-header">
+    <div class="header-label">01 / 要求整理</div>
+    <h1 class="header-title">要求整理</h1>
+    <div class="header-meta">
+      <span>2026-05-15</span>
+      <span>作成者：喜多亮介</span>
+      <span>ステータス：原案（レビュー前）</span>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <a href="index.html">← 提案資料トップ</a>
+    <span class="sep">›</span>
+    <span>要求整理</span>
+  </nav>
+
+  <main class="container">
+
+    <!-- アクター定義 -->
+    <h2 class="section-title">アクター定義</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:140px">フェーズ</th>
+          <th style="width:160px">アクター</th>
+          <th>説明</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="phase-badge">全フェーズ</span></td>
+          <td><strong>管理者</strong></td>
+          <td>コンテンツ登録・アカウント発行・システム設定を担う運用担当者（喜多・吉良等）</td>
+        </tr>
+        <tr>
+          <td><span class="phase-badge phase-1">Phase 1〜4</span></td>
+          <td><strong>スタッフ（未認証）</strong></td>
+          <td>ログイン不要でURL・QRコードからアクセスする現場スタッフ</td>
+        </tr>
+        <tr>
+          <td><span class="phase-badge phase-5">Phase 5〜</span></td>
+          <td><strong>店舗管理者</strong></td>
+          <td>店長相当。担当店舗のコンテンツ全てと店舗管理者向けコンテンツを閲覧できる</td>
+        </tr>
+        <tr>
+          <td><span class="phase-badge phase-5">Phase 5〜</span></td>
+          <td><strong>一般スタッフ</strong></td>
+          <td>社員・バイト。権限に応じた範囲のコンテンツを閲覧できる</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note-text">
+      ※ Phase 5以降、「スタッフ（未認証）」は廃止しログイン必須とする想定。管理者ロールの分割（管理者 / システム管理者）は将来検討（エンハンス参照）。
+    </div>
+
+    <!-- Phase 1 -->
+    <h2 class="section-title">
+      <span class="phase-badge phase-1">Phase 1</span>
+      動画・テキストマニュアルを閲覧できる（テスト環境）
+    </h2>
+    <div class="purpose-box">
+      <strong>ユーザーストーリー：</strong>スタッフとして、マニュアルの動画と工程テキストをスマホ・タブレット・PCで閲覧できる。<br>
+      <strong>環境：</strong>テスト環境のみ。コンテンツは直接DB投入（1〜2本のテストデータ）。本番公開はPhase 2で行う。
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">UC-ID</th>
+          <th style="width:200px">ユースケース名</th>
+          <th style="width:150px">アクター</th>
+          <th>概要</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="uc-id">UC-101</td>
+          <td>トップ画面を表示する</td>
+          <td>スタッフ（未認証）</td>
+          <td>URLにアクセスするとマニュアルのトップ画面（カテゴリ一覧）が表示される</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-102</td>
+          <td>カテゴリ一覧を参照する</td>
+          <td>スタッフ（未認証）</td>
+          <td>ブランド・業務種別のカテゴリ一覧を閲覧し、目的のマニュアルに辿り着ける</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-103</td>
+          <td>マニュアル一覧を閲覧する</td>
+          <td>スタッフ（未認証）</td>
+          <td>カテゴリ内のマニュアル一覧（タイトル等）を表示する</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-104</td>
+          <td>マニュアル詳細を表示する</td>
+          <td>スタッフ（未認証）</td>
+          <td>詳細ページを開くとYouTube動画と工程テキスト説明が1画面に表示される</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-105</td>
+          <td>YouTube動画を視聴する</td>
+          <td>スタッフ（未認証）</td>
+          <td>埋め込み表示されたYouTube動画を再生・停止できる</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note-text">
+      ※ 各マニュアルは固定URLで直接アクセス可能（QRコードでの案内を想定。QR生成は外部ツールで対応）。スマホに最適化する（PC・タブレットでも表示可能だが、レイアウト崩れは許容）。
+    </div>
+
+    <!-- Phase 2 -->
+    <h2 class="section-title">
+      <span class="phase-badge phase-2">Phase 2</span>
+      本番環境構築
+    </h2>
+    <div class="purpose-box">
+      <strong>目的：</strong>Phase 1のテスト環境で検証済みのシステムを本番に移行する。ホスティング・ドメイン・デプロイパイプラインを整備し、現場スタッフが実際にアクセスできる状態にする。
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">UC-ID</th>
+          <th style="width:200px">ユースケース名</th>
+          <th style="width:150px">アクター</th>
+          <th>概要</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="uc-id">UC-201</td>
+          <td>本番環境を構築する</td>
+          <td>管理者</td>
+          <td>ホスティング・ドメイン・デプロイパイプラインを整備し、本番公開できる状態にする</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Phase 3 -->
+    <h2 class="section-title">
+      <span class="phase-badge phase-3">Phase 3</span>
+      閲覧UX拡充
+    </h2>
+    <div class="purpose-box">
+      <strong>目的：</strong>現場スタッフが使いやすい閲覧体験を提供する。全画面・PDF印刷・習熟度別分類・検索を追加する。管理機能（Phase 4）より先に閲覧品質を高める。
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">UC-ID</th>
+          <th style="width:240px">ユースケース名</th>
+          <th style="width:150px">アクター</th>
+          <th>概要</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="uc-id">UC-301</td>
+          <td>動画を全画面表示する</td>
+          <td>スタッフ（未認証）</td>
+          <td>動画再生中にボタン1つで全画面モードに切り替えられる（スマホ横持ち対応）</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-302</td>
+          <td>印刷用PDFをダウンロードする</td>
+          <td>スタッフ（未認証）</td>
+          <td>「印刷用PDFボタン」をタップするとPDFが取得でき、紙への印刷・現場貼り出しができる</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-304</td>
+          <td>習熟度別カテゴリでマニュアルを参照する</td>
+          <td>スタッフ（未認証）</td>
+          <td>「初級・中級・上級」などの習熟度軸でマニュアルをフィルタリングして参照できる</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-305</td>
+          <td>マニュアルを検索する</td>
+          <td>スタッフ（未認証）</td>
+          <td>キーワードでマニュアルを横断検索し、目的のコンテンツに素早く辿り着ける</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Phase 4 -->
+    <h2 class="section-title">
+      <span class="phase-badge phase-4">Phase 4</span>
+      管理UI（コンテンツ管理）
+    </h2>
+    <div class="purpose-box">
+      <strong>目的：</strong>吉良さん（非エンジニア）が自分でコンテンツを登録・更新できる管理UIを導入する。これ以降、コンテンツ投入に開発者が介入する必要をなくす。将来的には店舗スタッフも使える操作性を目指す。
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">UC-ID</th>
+          <th style="width:200px">ユースケース名</th>
+          <th style="width:100px">アクター</th>
+          <th>概要</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="uc-id">UC-401</td>
+          <td>マニュアルを登録する</td>
+          <td>管理者</td>
+          <td>タイトル・YouTube URL・工程テキストを入力してマニュアルを新規作成できる（非エンジニアでも操作可能なUI）</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-402</td>
+          <td>マニュアルを編集する</td>
+          <td>管理者</td>
+          <td>既存マニュアルのタイトル・URL・テキストを更新できる</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-403</td>
+          <td>マニュアルを削除する</td>
+          <td>管理者</td>
+          <td>不要なマニュアルを削除できる</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-404</td>
+          <td>カテゴリを管理する</td>
+          <td>管理者</td>
+          <td>カテゴリの追加・編集・削除ができる</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-405</td>
+          <td>PDFを登録・更新する</td>
+          <td>管理者</td>
+          <td>マニュアルに紐付くPDFファイルをアップロード・差し替えできる</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-406</td>
+          <td>習熟度ラベルを設定する</td>
+          <td>管理者</td>
+          <td>マニュアルに「初級・中級・上級」等の習熟度ラベルを付与できる</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Phase 5 -->
+    <h2 class="section-title">
+      <span class="phase-badge phase-5">Phase 5</span>
+      アカウント・権限管理
+    </h2>
+    <div class="purpose-box">
+      <strong>目的：</strong>ログイン機能と階層別アクセス制御を実装し、コンテンツの公開範囲を管理する。アカウント発行は初期運用期間中はCLI / GitHub Actionsで対応し、管理UIはエンハンスで追加する。
+    </div>
+
+    <h3 class="subsection-title">認証</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">UC-ID</th>
+          <th style="width:200px">ユースケース名</th>
+          <th style="width:200px">アクター</th>
+          <th>概要</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="uc-id">UC-501</td>
+          <td>ログインする</td>
+          <td>店舗管理者 / 一般スタッフ</td>
+          <td>ID・パスワードでログインし、自分の権限に応じたコンテンツにアクセスできる</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-502</td>
+          <td>ログアウトする</td>
+          <td>店舗管理者 / 一般スタッフ</td>
+          <td>セッションを終了し、コンテンツへのアクセスを遮断する</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-503</td>
+          <td>パスワードを変更する</td>
+          <td>店舗管理者 / 一般スタッフ</td>
+          <td>自分のパスワードを変更できる</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">アカウント発行（運用）</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">UC-ID</th>
+          <th style="width:220px">ユースケース名</th>
+          <th style="width:100px">アクター</th>
+          <th>概要</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="uc-id">UC-511</td>
+          <td>アカウントを発行する</td>
+          <td>管理者</td>
+          <td>店舗単位でID・パスワード・役割（ロール）を設定してアカウントを発行する。初期はCLI / GitHub Actions経由で対応</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-512</td>
+          <td>アカウントを削除・停止する</td>
+          <td>管理者</td>
+          <td>閉店・異動時にアカウントを削除または一時停止する</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="subsection-title">権限・コンテンツ制御</h3>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">UC-ID</th>
+          <th style="width:240px">ユースケース名</th>
+          <th style="width:200px">アクター</th>
+          <th>概要</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="uc-id">UC-521</td>
+          <td>コンテンツの公開権限を設定する</td>
+          <td>管理者</td>
+          <td>マニュアルごとに「全員・店舗管理者以上・管理者のみ」等の公開範囲を設定できる</td>
+        </tr>
+        <tr>
+          <td class="uc-id">UC-522</td>
+          <td>権限に応じたコンテンツのみを表示する</td>
+          <td>店舗管理者 / 一般スタッフ</td>
+          <td>ログイン中のユーザー権限で閲覧許可されたコンテンツのみが表示される</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- エンハンス -->
+    <h2 class="section-title">
+      <span class="phase-badge enhance">エンハンス</span>
+      将来検討
+    </h2>
+    <div class="purpose-box">
+      Phase 5完成後に優先度・スケジュールを別途検討。本見積もりの対象外。
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">UC-ID</th>
+          <th style="width:280px">ユースケース名</th>
+          <th>カテゴリ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="uc-id">UC-E00</td><td>管理者ロールを分割して権限を制御する</td><td>管理者ロール分割</td></tr>
+        <tr><td class="uc-id">UC-E01</td><td>アカウント一覧を確認する</td><td>アカウント管理UI</td></tr>
+        <tr><td class="uc-id">UC-E02</td><td>アカウントを編集する</td><td>アカウント管理UI</td></tr>
+        <tr><td class="uc-id">UC-E11</td><td>連絡事項を投稿する</td><td>連絡事項機能</td></tr>
+        <tr><td class="uc-id">UC-E12</td><td>連絡事項一覧を閲覧する</td><td>連絡事項機能</td></tr>
+        <tr><td class="uc-id">UC-E13</td><td>連絡事項を検索する</td><td>連絡事項機能</td></tr>
+        <tr><td class="uc-id">UC-E20</td><td>画像付き工程テキストを閲覧する</td><td>その他</td></tr>
+        <tr><td class="uc-id">UC-E20a</td><td>工程に画像を追加・管理する</td><td>その他</td></tr>
+        <tr><td class="uc-id">UC-E21</td><td>多言語でマニュアルを閲覧する</td><td>その他（韓国展開想定）</td></tr>
+      </tbody>
+    </table>
+
+  </main>
+
+  <footer class="page-footer">
+    <p>本資料は原案です。内容は変更になる場合があります。</p>
+  </footer>
+  <script src="src/main.js"></script>
+</body>
+</html>

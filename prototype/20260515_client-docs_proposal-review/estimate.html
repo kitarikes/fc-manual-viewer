@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>見積もり — 味和商店 マニュアル閲覧システム</title>
+  <base href="/20260515_client-docs_proposal-review/">
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <header class="page-header">
+    <div class="header-label">03 / 見積もり（原案）</div>
+    <h1 class="header-title">見積もり（原案）</h1>
+    <div class="header-meta">
+      <span>2026-05-15</span>
+      <span>作成者：喜多亮介</span>
+      <span>ステータス：原案（レビュー前）</span>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <a href="index.html">← 提案資料トップ</a>
+    <span class="sep">›</span>
+    <span>見積もり</span>
+  </nav>
+
+  <main class="container">
+
+    <!-- 見積もり概要 -->
+    <h2 class="section-title">見積もり概要</h2>
+    <div class="summary-grid">
+      <div class="summary-item">
+        <div class="label">契約形態</div>
+        <div class="value">準委任</div>
+        <div style="font-size:12px; color: var(--text-muted); margin-top:4px;">フェーズ完了払い</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">月額単価</div>
+        <div class="value">200,000円</div>
+        <div style="font-size:12px; color: var(--text-muted); margin-top:4px;">税別・50〜70時間/月</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">総額</div>
+        <div class="value" style="font-size:1.4rem; color:var(--primary);">1,000,000円</div>
+        <div style="font-size:12px; color: var(--text-muted); margin-top:4px;">税別</div>
+      </div>
+      <div class="summary-item">
+        <div class="label">総期間</div>
+        <div class="value" style="font-size:1rem;">約5.5ヶ月</div>
+        <div style="font-size:12px; color: var(--text-muted); margin-top:4px;">05-25 〜 10-11</div>
+      </div>
+    </div>
+
+    <!-- フェーズ別支払い -->
+    <h2 class="section-title">フェーズ別支払い</h2>
+
+    <!-- Phase 1+2 -->
+    <div class="phase-card">
+      <div class="phase-card-header">
+        <span class="phase-badge phase-1">Phase 1+2</span>
+        <div class="phase-card-title">動画・テキストマニュアル閲覧 ＋ 本番環境構築</div>
+      </div>
+      <div class="phase-card-meta">
+        <div class="phase-meta-item">
+          <div class="label">期間</div>
+          <div class="value">2026-05-25 〜 06-21</div>
+          <div style="font-size:11px; color:var(--text-muted);">約1ヶ月</div>
+        </div>
+        <div class="phase-meta-item">
+          <div class="label">金額</div>
+          <div class="value big">200,000円</div>
+          <div style="font-size:11px; color:var(--text-muted);">税別</div>
+        </div>
+        <div class="phase-meta-item">
+          <div class="label">支払いタイミング</div>
+          <div class="value">Phase 2完了・本番公開確認後</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr><th style="width:90px">UC-ID</th><th>ユースケース名</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="uc-id">UC-101</td><td>トップ画面を表示する</td></tr>
+          <tr><td class="uc-id">UC-102</td><td>カテゴリ一覧を参照する</td></tr>
+          <tr><td class="uc-id">UC-103</td><td>マニュアル一覧を閲覧する</td></tr>
+          <tr><td class="uc-id">UC-104</td><td>マニュアル詳細を表示する</td></tr>
+          <tr><td class="uc-id">UC-105</td><td>YouTube動画を視聴する</td></tr>
+          <tr><td class="uc-id">UC-201</td><td>本番環境を構築する</td></tr>
+        </tbody>
+      </table>
+      <div class="purpose-box">
+        <strong>完了条件：</strong>テスト環境・本番環境でスタッフがマニュアルの動画と工程テキストを閲覧できる。本番URLへの疎通確認が完了している。
+      </div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="phase-card">
+      <div class="phase-card-header">
+        <span class="phase-badge phase-3">Phase 3</span>
+        <div class="phase-card-title">閲覧UX拡充</div>
+      </div>
+      <div class="phase-card-meta">
+        <div class="phase-meta-item">
+          <div class="label">期間</div>
+          <div class="value">2026-06-22 〜 07-19</div>
+          <div style="font-size:11px; color:var(--text-muted);">約1ヶ月</div>
+        </div>
+        <div class="phase-meta-item">
+          <div class="label">金額</div>
+          <div class="value big">200,000円</div>
+          <div style="font-size:11px; color:var(--text-muted);">税別</div>
+        </div>
+        <div class="phase-meta-item">
+          <div class="label">支払いタイミング</div>
+          <div class="value">Phase 3完了確認後</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr><th style="width:90px">UC-ID</th><th>ユースケース名</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="uc-id">UC-301</td><td>動画を全画面表示する</td></tr>
+          <tr><td class="uc-id">UC-302</td><td>印刷用PDFをダウンロードする</td></tr>
+          <tr><td class="uc-id">UC-304</td><td>難易度別カテゴリでマニュアルを参照する</td></tr>
+          <tr><td class="uc-id">UC-305</td><td>マニュアルを検索する</td></tr>
+        </tbody>
+      </table>
+      <div class="purpose-box">
+        <strong>完了条件：</strong>全画面・PDFダウンロード・習熟度フィルタ・キーワード検索が本番環境で動作する。
+      </div>
+    </div>
+
+    <!-- Phase 4 -->
+    <div class="phase-card">
+      <div class="phase-card-header">
+        <span class="phase-badge phase-4">Phase 4</span>
+        <div class="phase-card-title">管理UI（コンテンツ管理）</div>
+      </div>
+      <div class="phase-card-meta">
+        <div class="phase-meta-item">
+          <div class="label">期間</div>
+          <div class="value">2026-07-20 〜 08-30</div>
+          <div style="font-size:11px; color:var(--text-muted);">約1.5ヶ月</div>
+        </div>
+        <div class="phase-meta-item">
+          <div class="label">金額</div>
+          <div class="value big">300,000円</div>
+          <div style="font-size:11px; color:var(--text-muted);">税別</div>
+        </div>
+        <div class="phase-meta-item">
+          <div class="label">支払いタイミング</div>
+          <div class="value">受け入れテスト完了・吉良さん承認後</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr><th style="width:90px">UC-ID</th><th>ユースケース名</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="uc-id">UC-401</td><td>マニュアルを登録する</td></tr>
+          <tr><td class="uc-id">UC-402</td><td>マニュアルを編集する</td></tr>
+          <tr><td class="uc-id">UC-403</td><td>マニュアルを削除する</td></tr>
+          <tr><td class="uc-id">UC-404</td><td>カテゴリを管理する</td></tr>
+          <tr><td class="uc-id">UC-405</td><td>PDFを登録・更新する</td></tr>
+          <tr><td class="uc-id">UC-406</td><td>習熟度ラベルを設定する</td></tr>
+        </tbody>
+      </table>
+      <div class="purpose-box">
+        <strong>完了条件：</strong>吉良さんが開発者不在でコンテンツを登録・更新・削除できる。吉良さんによる受け入れテストが完了している。
+      </div>
+    </div>
+
+    <!-- Phase 5 -->
+    <div class="phase-card">
+      <div class="phase-card-header">
+        <span class="phase-badge phase-5">Phase 5</span>
+        <div class="phase-card-title">アカウント・権限管理</div>
+      </div>
+      <div class="phase-card-meta">
+        <div class="phase-meta-item">
+          <div class="label">期間</div>
+          <div class="value">2026-08-31 〜 10-11</div>
+          <div style="font-size:11px; color:var(--text-muted);">約1.5ヶ月</div>
+        </div>
+        <div class="phase-meta-item">
+          <div class="label">金額</div>
+          <div class="value big">300,000円</div>
+          <div style="font-size:11px; color:var(--text-muted);">税別</div>
+        </div>
+        <div class="phase-meta-item">
+          <div class="label">支払いタイミング</div>
+          <div class="value">Phase 5完了確認後</div>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr><th style="width:90px">UC-ID</th><th>ユースケース名</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="uc-id">UC-501</td><td>ログインする</td></tr>
+          <tr><td class="uc-id">UC-502</td><td>ログアウトする</td></tr>
+          <tr><td class="uc-id">UC-503</td><td>パスワードを変更する</td></tr>
+          <tr><td class="uc-id">UC-511</td><td>アカウントを発行する</td></tr>
+          <tr><td class="uc-id">UC-512</td><td>アカウントを削除・停止する</td></tr>
+          <tr><td class="uc-id">UC-521</td><td>コンテンツの公開権限を設定する</td></tr>
+          <tr><td class="uc-id">UC-522</td><td>権限に応じたコンテンツのみを表示する</td></tr>
+        </tbody>
+      </table>
+      <div class="purpose-box">
+        <strong>完了条件：</strong>ログイン必須でマニュアルにアクセスできる。店舗・ロールに応じた閲覧範囲制御が動作する。
+      </div>
+    </div>
+
+    <!-- 支払いスケジュール -->
+    <h2 class="section-title">支払いスケジュール</h2>
+    <p class="lead-text" style="margin-bottom: 16px;">各フェーズ完了の翌月末払い</p>
+    <table class="payment-table">
+      <thead>
+        <tr>
+          <th>フェーズ</th>
+          <th style="width:160px">作業完了予定日</th>
+          <th style="width:180px">支払い期限（翌月末）</th>
+          <th style="width:140px; text-align:right;">金額</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="phase-badge phase-1">Phase 1+2</span> 完了</td>
+          <td>2026-06-21</td>
+          <td>2026-07-31</td>
+          <td style="text-align:right; font-family: var(--serif);">200,000円</td>
+        </tr>
+        <tr>
+          <td><span class="phase-badge phase-3">Phase 3</span> 完了</td>
+          <td>2026-07-19</td>
+          <td>2026-08-31</td>
+          <td style="text-align:right; font-family: var(--serif);">200,000円</td>
+        </tr>
+        <tr>
+          <td><span class="phase-badge phase-4">Phase 4</span> 完了</td>
+          <td>2026-08-30</td>
+          <td>2026-09-30</td>
+          <td style="text-align:right; font-family: var(--serif);">300,000円</td>
+        </tr>
+        <tr>
+          <td><span class="phase-badge phase-5">Phase 5</span> 完了</td>
+          <td>2026-10-11</td>
+          <td>2026-11-30</td>
+          <td style="text-align:right; font-family: var(--serif);">300,000円</td>
+        </tr>
+        <tr>
+          <td><strong>合計</strong></td>
+          <td></td>
+          <td></td>
+          <td style="text-align:right; font-family: var(--serif); font-size:1.1rem; color:var(--primary);"><strong>1,000,000円</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 備考 -->
+    <h2 class="section-title">備考・未決事項</h2>
+    <div class="note-text">金額はすべて税別。消費税（10%）が別途発生する場合は要確認。</div>
+    <div class="note-text">各フェーズの「完了確認」方法（書面確認 or 口頭）・項目は事前に合意する。</div>
+    <div class="note-text">エンハンス（UC-E00〜E21）は本見積もりの対象外。Phase 5以降の開発スケジュールは別途相談。</div>
+
+  </main>
+
+  <footer class="page-footer">
+    <p>本資料は原案です。内容は変更になる場合があります。</p>
+  </footer>
+  <script src="src/main.js"></script>
+</body>
+</html>
