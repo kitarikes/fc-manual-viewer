@@ -219,6 +219,17 @@ gantt
   <footer class="page-footer">
     <p>本資料は原案です。内容は変更になる場合があります。</p>
   </footer>
+  <style>
+    /* Mermaidガントチャート：テキスト色を強制上書き */
+    .mermaid svg text { fill: #2d1a0a; }
+    .mermaid svg .tick text { fill: #2d1a0a !important; }
+    .mermaid svg .titleText { fill: #2d1a0a !important; }
+    .mermaid svg .sectionTitle { fill: #2d1a0a !important; }
+    /* タスクバー内テキストのみ白（暗いバー色に合わせる） */
+    .mermaid svg .taskText { fill: #fdf8f0 !important; }
+    .mermaid svg .taskTextOutsideRight,
+    .mermaid svg .taskTextOutsideLeft { fill: #2d1a0a !important; }
+  </style>
   <script src="src/main.js"></script>
   <script>
     mermaid.initialize({
@@ -226,7 +237,7 @@ gantt
       theme: 'base',
       themeVariables: {
         primaryColor: '#7a3e14',
-        primaryTextColor: '#fdf8f0',
+        primaryTextColor: '#2d1a0a',
         primaryBorderColor: '#c9914a',
         lineColor: '#c9914a',
         secondaryColor: '#f5ede0',
@@ -239,6 +250,10 @@ gantt
         titleColor: '#2d1a0a',
         todayLineColor: '#c9914a',
         fontSize: '13px',
+        taskTextColor: '#fdf8f0',
+        taskTextLightColor: '#2d1a0a',
+        taskTextOutsideColor: '#2d1a0a',
+        taskTextDarkColor: '#2d1a0a',
       }
     });
   </script>
