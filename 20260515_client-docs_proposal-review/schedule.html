@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>スケジュール — 味和商店 マニュアル閲覧システム</title>
+  <base href="./">
+  <link rel="stylesheet" href="src/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <header class="page-header">
+    <div class="header-label">02 / プロジェクトスケジュール</div>
+    <h1 class="header-title">プロジェクトスケジュール</h1>
+    <div class="header-meta">
+      <span>2026-05-15</span>
+      <span>スプリント単位：2週間</span>
+      <span>総期間：約5.5ヶ月（2026-05-25 〜 2026-10-11）</span>
+    </div>
+  </header>
+
+  <nav class="navbar">
+    <a href="index.html">← 提案資料トップ</a>
+    <span class="sep">›</span>
+    <span>プロジェクトスケジュール</span>
+  </nav>
+
+  <main class="container">
+
+    <!-- ガントチャート -->
+    <h2 class="section-title">ガントチャート</h2>
+    <div class="gantt-wrapper">
+      <div class="mermaid">
+gantt
+    title 味和商店 マニュアル閲覧システム 開発スケジュール
+    dateFormat YYYY-MM-DD
+    axisFormat %m/%d
+
+    section Phase 1｜テスト環境
+    UC-101 トップ画面表示            :p1a, 2026-05-25, 7d
+    UC-102 カテゴリ一覧参照          :p1b, after p1a, 3d
+    UC-103 マニュアル一覧閲覧        :p1c, after p1a, 3d
+    UC-104 マニュアル詳細表示        :p1d, 2026-06-01, 5d
+    UC-105 YouTube動画視聴           :p1e, after p1d, 2d
+
+    section Phase 2｜本番環境構築
+    UC-201 本番環境構築              :p2, 2026-06-08, 14d
+
+    section Phase 3｜閲覧UX拡充（前半）
+    UC-301 動画全画面表示            :p3a, 2026-06-22, 7d
+    UC-302 印刷用PDFダウンロード     :p3b, 2026-06-22, 14d
+
+    section Phase 3｜閲覧UX拡充（後半）
+    UC-304 習熟度別カテゴリ参照      :p3c, 2026-07-06, 7d
+    UC-305 マニュアル検索            :p3d, 2026-07-06, 14d
+
+    section Phase 4｜管理UI（前半）
+    UC-401 マニュアル登録            :p4a, 2026-07-20, 7d
+    UC-402 マニュアル編集            :p4b, after p4a, 5d
+    UC-403 マニュアル削除            :p4c, after p4b, 2d
+
+    section Phase 4｜管理UI（後半）
+    UC-404 カテゴリ管理              :p4d, 2026-08-03, 7d
+    UC-405 PDF登録・更新             :p4e, 2026-08-03, 10d
+    UC-406 習熟度ラベル設定          :p4f, after p4e, 4d
+
+    section Phase 4｜受け入れテスト
+    吉良さん受け入れテスト・修正対応  :p4g, 2026-08-17, 14d
+
+    section Phase 5｜認証
+    UC-501 ログイン                  :p5a, 2026-08-31, 7d
+    UC-502 ログアウト                :p5b, after p5a, 3d
+    UC-503 パスワード変更            :p5c, after p5b, 4d
+
+    section Phase 5｜アカウント管理
+    UC-511 アカウント発行（CLI）     :p5d, 2026-09-14, 7d
+    UC-512 アカウント削除・停止      :p5e, after p5d, 5d
+
+    section Phase 5｜権限制御
+    UC-521 公開権限設定              :p5f, 2026-09-28, 7d
+    UC-522 権限別コンテンツ表示      :p5g, after p5f, 7d
+      </div>
+    </div>
+
+    <!-- スプリント計画 -->
+    <h2 class="section-title">スプリント計画</h2>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:90px">スプリント</th>
+          <th style="width:190px">期間</th>
+          <th style="width:180px">フェーズ</th>
+          <th style="width:130px">対象UC</th>
+          <th>目標</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Sprint 1</strong></td>
+          <td>2026-05-25 〜 06-07</td>
+          <td><span class="phase-badge phase-1">Phase 1</span></td>
+          <td class="uc-id">UC-101〜105</td>
+          <td>テスト環境でマニュアル閲覧を実現する</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint 2</strong></td>
+          <td>2026-06-08 〜 06-21</td>
+          <td><span class="phase-badge phase-2">Phase 2</span></td>
+          <td class="uc-id">UC-201</td>
+          <td>本番公開できる状態にする</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint 3</strong></td>
+          <td>2026-06-22 〜 07-05</td>
+          <td><span class="phase-badge phase-3">Phase 3（前半）</span></td>
+          <td class="uc-id">UC-301, UC-302</td>
+          <td>全画面・PDF対応</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint 4</strong></td>
+          <td>2026-07-06 〜 07-19</td>
+          <td><span class="phase-badge phase-3">Phase 3（後半）</span></td>
+          <td class="uc-id">UC-304, UC-305</td>
+          <td>難易度フィルタ・検索</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint 5</strong></td>
+          <td>2026-07-20 〜 08-02</td>
+          <td><span class="phase-badge phase-4">Phase 4（前半）</span></td>
+          <td class="uc-id">UC-401〜403</td>
+          <td>マニュアル登録/更新/削除</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint 6</strong></td>
+          <td>2026-08-03 〜 08-16</td>
+          <td><span class="phase-badge phase-4">Phase 4（後半）</span></td>
+          <td class="uc-id">UC-404〜406</td>
+          <td>カテゴリ・PDF・難易度ラベル管理</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint 7</strong></td>
+          <td>2026-08-17 〜 08-30</td>
+          <td><span class="phase-badge phase-4">Phase 4（検収）</span></td>
+          <td class="uc-id">—</td>
+          <td>吉良さん受け入れテスト・修正対応</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint 8</strong></td>
+          <td>2026-08-31 〜 09-13</td>
+          <td><span class="phase-badge phase-5">Phase 5（認証）</span></td>
+          <td class="uc-id">UC-501〜503</td>
+          <td>ログイン・ログアウト・PW変更</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint 9</strong></td>
+          <td>2026-09-14 〜 09-27</td>
+          <td><span class="phase-badge phase-5">Phase 5（アカウント）</span></td>
+          <td class="uc-id">UC-511〜512</td>
+          <td>アカウント発行・削除</td>
+        </tr>
+        <tr>
+          <td><strong>Sprint 10</strong></td>
+          <td>2026-09-28 〜 10-11</td>
+          <td><span class="phase-badge phase-5">Phase 5（権限）</span></td>
+          <td class="uc-id">UC-521〜522</td>
+          <td>マニュアル公開範囲制御・権限別表示</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- マイルストーン -->
+    <h2 class="section-title">マイルストーン</h2>
+    <ul class="milestone-list">
+      <li class="milestone-item">
+        <div class="milestone-date">2026-06-07</div>
+        <div>
+          <div class="milestone-name">M1: テスト環境公開</div>
+          <div class="milestone-desc">スタッフが動画・テキストマニュアルを閲覧できる</div>
+        </div>
+      </li>
+      <li class="milestone-item">
+        <div class="milestone-date">2026-06-21</div>
+        <div>
+          <div class="milestone-name">M2: 本番公開</div>
+          <div class="milestone-desc">現場スタッフが実際にアクセスできる</div>
+        </div>
+      </li>
+      <li class="milestone-item">
+        <div class="milestone-date">2026-07-19</div>
+        <div>
+          <div class="milestone-name">M3: 閲覧UX完成</div>
+          <div class="milestone-desc">全画面表示・PDFダウンロード・検索・難易度ラベル対応</div>
+        </div>
+      </li>
+      <li class="milestone-item">
+        <div class="milestone-date">2026-08-30</div>
+        <div>
+          <div class="milestone-name">M4: 管理UI完成・検収</div>
+          <div class="milestone-desc">吉良さんがコンテンツを自走で管理・運用できる</div>
+        </div>
+      </li>
+      <li class="milestone-item">
+        <div class="milestone-date">2026-10-11</div>
+        <div>
+          <div class="milestone-name">M5: 認証・権限管理完成</div>
+          <div class="milestone-desc">ログイン必須・店舗単位のアクセス制御</div>
+        </div>
+      </li>
+    </ul>
+
+    <!-- エンハンス -->
+    <h2 class="section-title">エンハンス（別途スケジュール調整）</h2>
+    <div class="note-text">
+      Phase 5完成後に優先度・スケジュールを別途検討。UC-E00〜E21が対象。
+    </div>
+
+  </main>
+
+  <footer class="page-footer">
+    <p>本資料は原案です。内容は変更になる場合があります。</p>
+  </footer>
+  <style>
+    /* Mermaidガントチャート：テキスト色を強制上書き */
+    .mermaid svg text { fill: #2d1a0a; }
+    .mermaid svg .tick text { fill: #2d1a0a !important; }
+    .mermaid svg .titleText { fill: #2d1a0a !important; }
+    .mermaid svg .sectionTitle { fill: #2d1a0a !important; }
+    /* タスクバー内テキストのみ白（暗いバー色に合わせる） */
+    .mermaid svg .taskText { fill: #fdf8f0 !important; }
+    .mermaid svg .taskTextOutsideRight,
+    .mermaid svg .taskTextOutsideLeft { fill: #2d1a0a !important; }
+  </style>
+  <script src="src/main.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: 'base',
+      themeVariables: {
+        primaryColor: '#7a3e14',
+        primaryTextColor: '#2d1a0a',
+        primaryBorderColor: '#c9914a',
+        lineColor: '#c9914a',
+        secondaryColor: '#f5ede0',
+        tertiaryColor: '#fdf8f0',
+        background: '#fdf8f0',
+        mainBkg: '#7a3e14',
+        sectionBkgColor: '#f5ede0',
+        altSectionBkgColor: '#e8d9c4',
+        gridColor: '#e8d9c4',
+        titleColor: '#2d1a0a',
+        todayLineColor: '#c9914a',
+        fontSize: '13px',
+        taskTextColor: '#fdf8f0',
+        taskTextLightColor: '#2d1a0a',
+        taskTextOutsideColor: '#2d1a0a',
+        taskTextDarkColor: '#2d1a0a',
+      }
+    });
+  </script>
+</body>
+</html>

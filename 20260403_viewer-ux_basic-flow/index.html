@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FC Manual Viewer</title>
+  <base href="./">
+  <link rel="stylesheet" href="src/styles.css?v=20260419">
+</head>
+<body>
+
+  <div id="navbar-root"></div>
+  <div id="page-header-root"></div>
+  <main class="page-main" id="page-main">
+    <p class="loading">読み込み中…</p>
+  </main>
+
+  <script src="src/main.js?v=20260419"></script>
+  <script>
+    const STAFF_PORTAL_URL = '../20260402_notice-board_staff-comms/';
+    const { BRANDS, CATEGORIES, MOVIES } = window.AppData;
+    const { getParam, escHtml, difficultyLabel } = window.AppUtils;
+
+    const brandSlug    = getParam('brand');
+    const categorySlug = getParam('category');
+
+    if (!brandSlug) {
+      window.location.replace(STAFF_PORTAL_URL);
+    } else if (!categorySlug) {
+      renderCategories();
+    } else {
+      renderMovies();
+    }
+
+    // ============================================================
+    // カテゴリ選択
+    // ============================================================
+    function renderCategories() {
+      const brand = BRANDS.find(b => b.slug === brandSlug);
+      if (!brand) {
+        window.location.replace(STAFF_PORTAL_URL);
+        return;
+      }
+
+      const cats = CATEGORIES.filter(c => c.brandId === brand.id);
+      document.title = `${brand.name} — FC Manual Viewer`;
+
+      document.getElementById('navbar-root').innerHTML = `
+        <nav class="navbar">
+          <a href="${STAFF_PORTAL_URL}" class="nav-back">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M10 12l-4-4 4-4"/>
+            </svg>
+            スタッフポータル
+          </a>
+          <div class="nav-breadcrumb">
+            <span class="nav-brand-name">スタッフポータル</span>
+            <span class="sep"> › </span>
+            <span class="nav-current">${escHtml(brand.name)}</span>
+          </div>
+          <span class="navbar-title">FC Manual Viewer</span>
+        </nav>`;
+
+      document.getElementById('page-header-root').innerHTML = `
+        <div class="page-header">
+          <div class="page-header-inner">
+            <p class="page-label">${escHtml(brand.name)}</p>
+            <h1>カテゴリを選んでください</h1>
+            <p>閲覧したいマニュアルのカテゴリを選択してください。</p>
+          </div>
+        </div>`;
+
+      document.getElementById('page-main').innerHTML = `
+        <p class="section-label">Categories</p>
+        <h2 class="section-heading">${cats.length}カテゴリ</h2>
+        <div class="category-grid">
+          ${cats.map(c => {
+            const count = MOVIES.filter(m => m.categoryId === c.id).length;
+            return `
+              <a class="category-card" href="?brand=${escHtml(brandSlug)}&category=${escHtml(c.slug)}">
+                <p class="category-name">${escHtml(c.name)}</p>
+                <p class="category-desc">${escHtml(c.description)}</p>
+                <p class="category-meta">${count > 0 ? `${count}本のマニュアル` : '準備中'}</p>
+              </a>`;
+          }).join('')}
+        </div>`;
+    }
+
+    // ============================================================
+    // マニュアル一覧
+    // ============================================================
+    function renderMovies() {
+      const brand = BRANDS.find(b => b.slug === brandSlug);
+      const category = CATEGORIES.find(c => c.slug === categorySlug && c.brandId === brand?.id);
+
+      if (!brand) {
+        window.location.replace(STAFF_PORTAL_URL);
+        return;
+      }
+      if (!category) {
+        window.location.replace(`?brand=${encodeURIComponent(brandSlug)}`);
+        return;
+      }
+
+      const movies = MOVIES.filter(m => m.categoryId === category.id);
+      document.title = `${category.name} — ${brand.name}`;
+
+      document.getElementById('navbar-root').innerHTML = `
+        <nav class="navbar">
+          <a href="?brand=${escHtml(brandSlug)}" class="nav-back">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M10 12l-4-4 4-4"/>
+            </svg>
+            カテゴリ一覧
+          </a>
+          <div class="nav-breadcrumb">
+            <span class="nav-brand-name">${escHtml(brand.name)}</span>
+            <span class="sep"> › </span>
+            <span class="nav-current">${escHtml(category.name)}</span>
+          </div>
+          <span class="navbar-title">FC Manual Viewer</span>
+        </nav>`;
+
+      document.getElementById('page-header-root').innerHTML = `
+        <div class="page-header">
+          <div class="page-header-inner">
+            <p class="page-label">${escHtml(category.name)}</p>
+            <h1>${escHtml(category.name)}</h1>
+            <p>${escHtml(category.description)}</p>
+          </div>
+        </div>`;
+
+      if (movies.length === 0) {
+        document.getElementById('page-main').innerHTML = `
+          <p class="loading">このカテゴリのマニュアルは現在準備中です。</p>`;
+        return;
+      }
+
+      document.getElementById('page-main').innerHTML = `
+        <p class="section-label">Manuals</p>
+        <h2 class="section-heading">${movies.length}本のマニュアル</h2>
+        <div class="movie-list">
+          ${movies.map(m => `
+            <a class="movie-item"
+               href="viewer/?brand=${escHtml(brandSlug)}&category=${escHtml(categorySlug)}&movie=${escHtml(m.id)}">
+              <div class="movie-item-left">
+                <span class="movie-difficulty difficulty-${m.difficulty}">
+                  ${difficultyLabel(m.difficulty)}
+                </span>
+                <h3 class="movie-title">${escHtml(m.title)}</h3>
+                <p class="movie-desc">${escHtml(m.description)}</p>
+                <div class="movie-meta-row">
+                  <span class="movie-meta-badge">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/>
+                    </svg>
+                    約${m.estimatedMinutes}分
+                  </span>
+                  <span class="movie-meta-badge">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <path d="M2 4h12M2 8h8M2 12h5"/>
+                    </svg>
+                    ${m.totalSteps}ステップ
+                  </span>
+                </div>
+                <div class="movie-tags">
+                  ${m.tags.map(t => `<span class="tag">${escHtml(t)}</span>`).join('')}
+                </div>
+              </div>
+              <div class="movie-item-right">
+                <span class="arrow-cta">
+                  見る
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 8h10M9 4l4 4-4 4"/>
+                  </svg>
+                </span>
+              </div>
+            </a>
+          `).join('')}
+        </div>`;
+    }
+  </script>
+
+</body>
+</html>

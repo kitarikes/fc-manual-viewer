@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>要求仕様書 — FC Manual Viewer</title>
+  <link rel="stylesheet" href="../gallery.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+  <style>
+    /* ============================================================
+       Spec Viewer — layout
+       ============================================================ */
+
+    .spec-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    /* ============================================================
+       Sidebar TOC
+       ============================================================ */
+
+    .spec-toc {
+      position: sticky;
+      top: 2rem;
+      background: #fff;
+      border: 1px solid var(--ivory-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .spec-toc-header {
+      background: var(--primary);
+      padding: 0.75rem 1rem;
+      font-family: var(--sans);
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .spec-toc-list {
+      list-style: none;
+      padding: 0.5rem 0;
+    }
+
+    .spec-toc-item a {
+      display: block;
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-sub);
+      text-decoration: none;
+      padding: 0.4rem 1rem;
+      border-left: 2px solid transparent;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      line-height: 1.4;
+    }
+
+    .spec-toc-item a:hover {
+      color: var(--primary);
+      border-left-color: var(--gold);
+      background: var(--ivory);
+    }
+
+    .spec-toc-item.is-active a {
+      color: var(--primary);
+      border-left-color: var(--gold);
+      background: var(--ivory);
+      font-weight: 500;
+    }
+
+    .spec-toc-item .toc-req-id {
+      font-family: var(--sans);
+      font-size: 0.6rem;
+      color: var(--gold);
+      font-weight: 500;
+      display: inline-block;
+      margin-right: 0.35rem;
+    }
+
+    /* ============================================================
+       Markdown content area
+       ============================================================ */
+
+    .spec-content {
+      min-width: 0;
+    }
+
+    .spec-content-inner {
+      background: #fff;
+      border: 1px solid var(--ivory-border);
+      border-radius: 4px;
+      padding: 2.5rem 3rem;
+    }
+
+    /* ---- H1 ---- */
+    .spec-content-inner h1 {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--primary);
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--gold);
+    }
+
+    .spec-content-inner h1 + h2 {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      margin-bottom: 1.75rem;
+      padding-bottom: 0;
+      border: none;
+      background: none;
+    }
+
+    /* ---- metadata table directly after h1+h2 ---- */
+    .spec-content-inner h1 + h2 + table {
+      margin-bottom: 2rem;
+    }
+
+    /* ---- HR ---- */
+    .spec-content-inner hr {
+      border: none;
+      border-top: 1px solid var(--ivory-border);
+      margin: 2.5rem 0;
+    }
+
+    /* ---- H2 (Requirement groups) ---- */
+    .spec-content-inner h2 {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--ivory);
+      background: var(--primary);
+      padding: 0.65rem 1.1rem;
+      border-radius: 3px;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.04em;
+      position: relative;
+    }
+
+    .spec-content-inner h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 1.1rem;
+      right: 1.1rem;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    /* ---- H3 (Specifications) ---- */
+    .spec-content-inner h3 {
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-top: 1.75rem;
+      margin-bottom: 0.6rem;
+      padding-left: 0.875rem;
+      border-left: 3px solid var(--gold);
+      line-height: 1.5;
+    }
+
+    /* ---- Paragraphs ---- */
+    .spec-content-inner p {
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      line-height: 1.9;
+      font-weight: 300;
+      margin-bottom: 0.875rem;
+    }
+
+    /* ---- Blockquote (理由) ---- */
+    .spec-content-inner blockquote {
+      background: var(--ivory);
+      border-left: 3px solid var(--gold);
+      border-radius: 0 3px 3px 0;
+      padding: 0.7rem 1rem;
+      margin: 0.875rem 0;
+    }
+
+    .spec-content-inner blockquote p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      font-weight: 300;
+    }
+
+    .spec-content-inner blockquote p strong {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* ---- Code ---- */
+    .spec-content-inner code {
+      font-family: 'SFMono-Regular', 'Consolas', 'Liberation Mono', monospace;
+      font-size: 0.78rem;
+      background: var(--ivory-dark);
+      border: 1px solid var(--ivory-border);
+      border-radius: 2px;
+      padding: 0.1em 0.4em;
+      color: var(--primary-light);
+    }
+
+    /* ---- Tables ---- */
+    .spec-content-inner table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.875rem 0 1.25rem;
+      font-size: 0.8rem;
+    }
+
+    .spec-content-inner thead th {
+      background: var(--ivory-dark);
+      color: var(--primary);
+      font-family: var(--sans);
+      font-weight: 600;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      padding: 0.55rem 0.875rem;
+      border: 1px solid var(--ivory-border);
+      text-align: left;
+    }
+
+    .spec-content-inner tbody td {
+      font-family: var(--sans);
+      font-weight: 300;
+      color: var(--text-sub);
+      padding: 0.5rem 0.875rem;
+      border: 1px solid var(--ivory-border);
+      line-height: 1.6;
+      vertical-align: top;
+    }
+
+    .spec-content-inner tbody tr:nth-child(even) td {
+      background: var(--ivory);
+    }
+
+    .spec-content-inner tbody td code {
+      font-size: 0.74rem;
+    }
+
+    /* ---- Lists ---- */
+    .spec-content-inner ul,
+    .spec-content-inner ol {
+      padding-left: 1.5rem;
+      margin-bottom: 0.875rem;
+    }
+
+    .spec-content-inner li {
+      font-family: var(--sans);
+      font-size: 0.83rem;
+      color: var(--text-sub);
+      line-height: 1.8;
+      font-weight: 300;
+      margin-bottom: 0.2rem;
+    }
+
+    /* ---- Strong ---- */
+    .spec-content-inner strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* ---- Loading / Error ---- */
+    .spec-loading {
+      text-align: center;
+      padding: 5rem 2rem;
+      font-family: var(--sans);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* ---- Toolbar ---- */
+    .spec-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .spec-toolbar-label {
+      font-family: var(--sans);
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-transform: uppercase;
+    }
+
+    .spec-download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-family: var(--sans);
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--text-sub);
+      text-decoration: none;
+      padding: 0.35rem 0.75rem;
+      border: 1px solid var(--ivory-border);
+      border-radius: 3px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+
+    .spec-download-btn:hover {
+      border-color: var(--gold);
+      color: var(--primary);
+    }
+
+    .spec-download-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* ============================================================
+       Responsive
+       ============================================================ */
+
+    @media (max-width: 860px) {
+      .spec-layout {
+        grid-template-columns: 1fr;
+        padding: 2rem 1.25rem 4rem;
+        gap: 1.5rem;
+      }
+
+      .spec-toc {
+        position: static;
+      }
+
+      .spec-content-inner {
+        padding: 1.75rem 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="gallery-header">
+  <p class="header-kana">FC Manual Viewer / Prototype Gallery</p>
+  <h1>要求仕様書</h1>
+  <p>プロトタイプから起こしたUSDM形式の要件定義ドキュメント。</p>
+  <nav class="header-nav">
+    <a href="../index.html" class="header-nav-link">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="2" y="2" width="5" height="5" rx="1"/>
+        <rect x="9" y="2" width="5" height="5" rx="1"/>
+        <rect x="2" y="9" width="5" height="5" rx="1"/>
+        <rect x="9" y="9" width="5" height="5" rx="1"/>
+      </svg>
+      プロトタイプ一覧
+    </a>
+    <a href="./index.html" class="header-nav-link is-active">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M3 4h10M3 7h10M3 10h6"/>
+        <circle cx="13" cy="11" r="2.5"/>
+        <path d="M14.8 12.8l1.2 1.2"/>
+      </svg>
+      要求仕様書
+    </a>
+  </nav>
+</header>
+
+<div class="spec-layout">
+
+  <!-- ---- サイドバー TOC ---- -->
+  <aside class="spec-toc" id="spec-toc">
+    <p class="spec-toc-header">Contents</p>
+    <ul class="spec-toc-list" id="toc-list">
+      <!-- JS で生成 -->
+    </ul>
+  </aside>
+
+  <!-- ---- メインコンテンツ ---- -->
+  <main class="spec-content">
+    <div class="spec-toolbar">
+      <span class="spec-toolbar-label">Requirements</span>
+      <a class="spec-download-btn" href="./usdm.md" download="USDM_マニュアル閲覧システム.md">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M8 3v7M5 8l3 3 3-3"/>
+          <path d="M3 13h10"/>
+        </svg>
+        Markdown をダウンロード
+      </a>
+    </div>
+    <div class="spec-content-inner" id="spec-content-inner">
+      <p class="spec-loading">読み込み中…</p>
+    </div>
+  </main>
+
+</div>
+
+<footer class="gallery-footer">
+  FC Manual Viewer — Internal Prototyping Environment
+</footer>
+
+<script>
+(async function () {
+  const contentEl = document.getElementById('spec-content-inner');
+  const tocList   = document.getElementById('toc-list');
+
+  // ---- 1. Markdownを取得 ----
+  let mdText;
+  try {
+    const res = await fetch('./usdm.md', { cache: 'no-store' });
+    if (!res.ok) throw new Error(res.status);
+    mdText = await res.text();
+  } catch (e) {
+    contentEl.innerHTML = `<p class="spec-loading">usdm.md の読み込みに失敗しました（${e.message}）。</p>`;
+    return;
+  }
+
+  // ---- 2. marked でレンダリング ----
+  contentEl.innerHTML = marked.parse(mdText, { breaks: true });
+
+  // ---- 3. TOC を生成（H2 のみ） ----
+  const headings = contentEl.querySelectorAll('h2');
+  headings.forEach((h, i) => {
+    // id を付与
+    const id = 'section-' + i;
+    h.id = id;
+
+    // テキストから "R1　ブランド選択機能" のように分解
+    const raw   = h.textContent.trim();
+    const match = raw.match(/^(R\d+)\s*[　\s]+(.+)$/);
+    const reqId = match ? match[1] : '';
+    const label = match ? match[2] : raw;
+
+    const li = document.createElement('li');
+    li.className = 'spec-toc-item';
+    li.dataset.target = id;
+    li.innerHTML = `<a href="#${id}">
+      ${reqId ? `<span class="toc-req-id">${reqId}</span>` : ''}${label}
+    </a>`;
+    tocList.appendChild(li);
+  });
+
+  // ---- 4. スクロールで TOC をハイライト ----
+  const tocItems = tocList.querySelectorAll('.spec-toc-item');
+
+  function updateToc() {
+    let current = '';
+    headings.forEach(h => {
+      if (h.getBoundingClientRect().top <= 80) current = h.id;
+    });
+    tocItems.forEach(item => {
+      item.classList.toggle('is-active', item.dataset.target === current);
+    });
+  }
+
+  window.addEventListener('scroll', updateToc, { passive: true });
+  updateToc();
+
+  // ---- 5. スムーズスクロール ----
+  tocList.addEventListener('click', e => {
+    const a = e.target.closest('a');
+    if (!a) return;
+    e.preventDefault();
+    const target = document.getElementById(a.getAttribute('href').slice(1));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+})();
+</script>
+
+</body>
+</html>

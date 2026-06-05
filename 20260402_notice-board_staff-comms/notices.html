@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>連絡事項一覧 — FC Manual Viewer</title>
+  <base href="./">
+  <link rel="stylesheet" href="src/styles.css">
+  <style>
+    .page-title-block {
+      text-align: center;
+      padding: 1.5rem 0 1rem;
+    }
+
+    .page-title {
+      font-family: var(--serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--primary);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.3rem;
+    }
+
+    .page-title-sub {
+      font-size: 0.73rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .filter-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .filter-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.4rem;
+    }
+
+    .result-count {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 0.875rem;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="navbar-root"></div>
+
+  <main class="page-main">
+    <!-- ページタイトル -->
+    <div class="page-title-block">
+      <div class="divider"></div>
+      <h1 class="page-title">連絡事項</h1>
+      <p class="page-title-sub">本部からの通知・指示を確認できます</p>
+      <div class="divider"></div>
+    </div>
+
+    <!-- フィルタ -->
+    <div class="filter-section">
+      <div class="filter-label">絞り込み</div>
+      <div class="filter-bar" id="filter-bar">
+        <!-- JS で生成 -->
+      </div>
+    </div>
+
+    <!-- 件数 -->
+    <div class="result-count" id="result-count"></div>
+
+    <!-- 連絡事項リスト -->
+    <div class="notice-list" id="notice-list">
+      <!-- JS で生成 -->
+    </div>
+  </main>
+
+  <script src="src/main.js"></script>
+  <script>
+    (() => {
+    const { BRANDS, NOTICES } = window.AppData;
+    const { getParam, escHtml, priorityMeta, brandLabel, formatDate, buildNavbar } = window.AppUtils;
+
+    // Navbar
+    document.getElementById('navbar-root').innerHTML = buildNavbar({
+      backHref: './',
+      backLabel: 'トップへ',
+      breadcrumbs: ['連絡事項一覧'],
+      title: 'FC Manual',
+    });
+
+    // 現在のフィルタ状態
+    let currentBrand = getParam('brand') || 'all';
+
+    // フィルタボタン生成
+    const filterDefs = [
+      { id: 'all', label: 'すべて' },
+      ...BRANDS.map(b => ({ id: b.id, label: b.name })),
+    ];
+
+    function renderFilterBar() {
+      const bar = document.getElementById('filter-bar');
+      bar.innerHTML = filterDefs.map(f => `
+        <button
+          class="filter-btn${currentBrand === f.id ? ' active' : ''}"
+          data-brand="${escHtml(f.id)}"
+        >${escHtml(f.label)}</button>
+      `).join('');
+
+      bar.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          currentBrand = btn.dataset.brand;
+          // URL を更新（ページリロードなし）
+          const url = new URL(window.location.href);
+          if (currentBrand === 'all') {
+            url.searchParams.delete('brand');
+          } else {
+            url.searchParams.set('brand', currentBrand);
+          }
+          history.replaceState(null, '', url.toString());
+          renderFilterBar();
+          renderNotices();
+        });
+      });
+    }
+
+    // 優先度ソート順
+    const priorityOrder = { urgent: 0, important: 1, normal: 2 };
+
+    function renderNotices() {
+      const filtered = NOTICES
+        .filter(n => currentBrand === 'all' || n.brand === 'all' || n.brand === currentBrand)
+        .sort((a, b) => (priorityOrder[a.priority] ?? 9) - (priorityOrder[b.priority] ?? 9));
+
+      const countEl = document.getElementById('result-count');
+      countEl.textContent = `${filtered.length} 件`;
+
+      const list = document.getElementById('notice-list');
+
+      if (filtered.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <p>該当する連絡事項がありません。<br>フィルタを変更してお試しください。</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map(n => {
+        const pm = priorityMeta(n.priority);
+        const urgentClass = n.priority === 'urgent' ? ' is-urgent' : n.priority === 'important' ? ' is-important' : '';
+        const bl = brandLabel(n.brand);
+        return `
+          <a class="notice-card${urgentClass}" href="notice-detail/?id=${escHtml(n.id)}">
+            <div class="notice-card-header">
+              <span class="priority-badge ${escHtml(pm.class)}">${escHtml(pm.label)}</span>
+              <span class="notice-card-title">${escHtml(n.title)}</span>
+            </div>
+            <p class="notice-card-summary">${escHtml(n.summary)}</p>
+            <div class="notice-card-meta">
+              <span class="brand-tag">${escHtml(bl)}</span>
+              <span>${escHtml(formatDate(n.date))}</span>
+              <span>${escHtml(n.author)}</span>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+
+    renderFilterBar();
+    renderNotices();
+    })();
+  </script>
+
+</body>
+</html>
